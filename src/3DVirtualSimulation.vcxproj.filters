@@ -41,10 +41,10 @@
     <ClCompile Include="MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\tmp\GeneratedFiles\Win32\Debug\moc_MainWindow.cpp">
+    <ClCompile Include="..\build\GeneratedFiles\Win32\Debug\moc_MainWindow.cpp">
       <Filter>Generated Files\Debug_Win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\tmp\GeneratedFiles\Win32\Release\moc_MainWindow.cpp">
+    <ClCompile Include="..\build\GeneratedFiles\Win32\Release\moc_MainWindow.cpp">
       <Filter>Generated Files\Release_Win32</Filter>
     </ClCompile>
   </ItemGroup>
