@@ -7,7 +7,9 @@ OgreWidget::OgreWidget(QWidget *parent)
 	  mRoot(0),
 	  mWindow(0),
 	  mSceneMgr(0),
-	  mCamera(0)
+	  mCamera(0),
+	  mViewport(0),
+	  mPluginsCfg(Ogre::StringUtil::BLANK)
 {
 	setAttribute(Qt::WA_OpaquePaintEvent);
 	setAttribute(Qt::WA_NoSystemBackground);
@@ -34,6 +36,12 @@ QSize OgreWidget::sizeHint() const
 
 void OgreWidget::showEvent(QShowEvent *evt)
 {
+#ifdef _DEBUG
+	mPluginsCfg = "plugins_d.cfg";
+#else
+	mPluginsCfg = "plugins.cfg";
+#endif
+
 	if (!setup())
 		return;
 
@@ -72,7 +80,7 @@ void OgreWidget::timerEvent(QTimerEvent *evt)
 
 bool OgreWidget::setup()
 {
-	mRoot = new Ogre::Root("plugins.cfg");
+	mRoot = new Ogre::Root(mPluginsCfg);
 
 	setupResources();
 
@@ -161,25 +169,17 @@ void OgreWidget::createCamera()
 void OgreWidget::createViewports()
 {
     // Create one viewport, entire window
-    Ogre::Viewport *vp = mWindow->addViewport(mCamera);
-    vp->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
+    mViewport = mWindow->addViewport(mCamera);
+    mViewport->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 
     // Alter the camera aspect ratio to match the viewport
     mCamera->setAspectRatio(Ogre::Real(width()) / Ogre::Real(height()));
+	// mCamera->setAspectRatio(Ogre::Real(mViewport->getActualWidth()) / Ogre::Real(mViewport->getActualHeight()));
 }
 
 void OgreWidget::loadResources()
 {
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-}
-
-void OgreWidget::createScene()
-{
-	mSceneMgr->setAmbientLight(Ogre::ColourValue(1, 1, 1));
-    Ogre::Entity *treeEntity = mSceneMgr->createEntity("Tree", "tree.mesh");
-    Ogre::SceneNode *treeNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("TreeNode");
-    treeNode->attachObject(treeEntity);
-    treeNode->yaw(Ogre::Radian(Ogre::Degree(-90)));
 }
 
 void OgreWidget::render()

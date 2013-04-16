@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "OgreWidget.h"
+#include "PhysX.h"
 
 class QAction;
 class QLabel;
@@ -25,7 +25,7 @@ private:
 	QAction *exitAct;
 	QAction *aboutQtAct;
 
-	OgreWidget *mOgreWidget;
+	PhysX *mOgreWidget;
 };
 
 #endif

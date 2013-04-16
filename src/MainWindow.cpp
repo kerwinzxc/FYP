@@ -4,7 +4,7 @@
 
 MainWindow::MainWindow()
 {
-	mOgreWidget = new OgreWidget;
+	mOgreWidget = new PhysX;
 	setCentralWidget(mOgreWidget);
 
 	createActions();

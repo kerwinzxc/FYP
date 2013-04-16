@@ -26,16 +26,19 @@ protected:
 	void createCamera();
 	void createViewports();
 	void loadResources();
-	void createScene();
 	void render();
+
+	virtual void createScene() = 0;
+
+	Ogre::Root         *mRoot;
+	Ogre::RenderWindow *mWindow;
+	Ogre::SceneManager *mSceneMgr;
+	Ogre::Camera       *mCamera;
+	Ogre::Viewport     *mViewport;
+	Ogre::String        mPluginsCfg;
 
 private:
 	QSize sizeHint() const;
-
-	Ogre::Root *mRoot;
-	Ogre::RenderWindow *mWindow;
-	Ogre::SceneManager *mSceneMgr;
-	Ogre::Camera *mCamera;
 };
 
 #endif
