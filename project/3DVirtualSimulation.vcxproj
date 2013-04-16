@@ -86,11 +86,11 @@
     <ClCompile Include="..\build\GeneratedFiles\Win32\Release\moc_MainWindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\MainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="MainWindow.h">
+    <CustomBuild Include="..\src\MainWindow.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing MainWindow.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
