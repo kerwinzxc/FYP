@@ -17,5 +17,7 @@
 *.material text eol=lf
 
 # Denote all files that are truly binary and should not be modified.
+*.dll  binary
+*.lib  binary
 *.mesh binary
 *.png  binary
