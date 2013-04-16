@@ -35,21 +35,33 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MainWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\build\GeneratedFiles\Win32\Debug\moc_MainWindow.cpp">
       <Filter>Generated Files\Debug_Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\build\GeneratedFiles\Win32\Release\moc_MainWindow.cpp">
       <Filter>Generated Files\Release_Win32</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\GeneratedFiles\Win32\Debug\moc_OgreWidget.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\GeneratedFiles\Win32\Release\moc_OgreWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\OgreWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="MainWindow.h">
+    <CustomBuild Include="..\src\MainWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\OgreWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
