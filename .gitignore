@@ -1,8 +1,7 @@
 # Directories
+bin/
+build/
 ipch/
-tmp/
-Win32/
-x64/
 # Files of a type
 *.opensdf
 *.sdf
