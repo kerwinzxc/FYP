@@ -4,6 +4,9 @@
 
 MainWindow::MainWindow()
 {
+	mOgreWidget = new OgreWidget;
+	setCentralWidget(mOgreWidget);
+
 	createActions();
 	createMenus();
 }

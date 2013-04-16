@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "OgreWidget.h"
+
 class QAction;
 class QLabel;
 class QMenu;
@@ -22,6 +24,8 @@ private:
 	QMenu *helpMenu;
 	QAction *exitAct;
 	QAction *aboutQtAct;
+
+	OgreWidget *mOgreWidget;
 };
 
 #endif
