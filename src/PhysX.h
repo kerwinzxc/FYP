@@ -14,13 +14,13 @@ public:
 	~PhysX();
 
 protected:
+	void timerEvent(QTimerEvent *evt);
+
 	void createScene();
 
 private:
 	void setupPhysics();
 	void stopPhysics();
-	void setupContent();
-	void cleanupContent();
 
 	NxOgre::World*          mWorld;
 	NxOgre::Scene*          mScene;

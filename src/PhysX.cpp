@@ -1,12 +1,23 @@
 #include "PhysX.h"
 
-PhysX::PhysX(QWidget *parent) : OgreWidget(parent)
+PhysX::PhysX(QWidget *parent)
+	: mWorld(0),
+	  mScene(0),
+	  mMeshManager(0),
+	  mDefaultMaterial(0),
+	  mRenderSystem(0)
 {
 }
 
 PhysX::~PhysX()
 {
 	stopPhysics();
+}
+
+void PhysX::timerEvent(QTimerEvent *evt)
+{
+	mWorld->advance(0.1);
+	OgreWidget::timerEvent(evt);
 }
 
 void PhysX::createScene()

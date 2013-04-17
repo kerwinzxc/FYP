@@ -25,7 +25,7 @@ private:
 	QAction *exitAct;
 	QAction *aboutQtAct;
 
-	PhysX *mOgreWidget;
+	OgreWidget *mOgreWidget;
 };
 
 #endif
