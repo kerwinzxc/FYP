@@ -19,13 +19,13 @@
     <ConfigurationType>Application</ConfigurationType>
     <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin;$(PHYSX_DIR)\Bin\$(Platform);$(OGRE_HOME)\Bin\$(Configuration);..\externals\nxogre\bin;
 $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
-    <CharacterSet>MultiByte</CharacterSet>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin;$(PHYSX_DIR)\Bin\$(Platform);$(OGRE_HOME)\Bin\$(Configuration);..\externals\nxogre\bin;
 $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
-    <CharacterSet>MultiByte</CharacterSet>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
