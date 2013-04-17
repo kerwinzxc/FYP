@@ -18,13 +18,13 @@ OgreWidget::OgreWidget(QWidget *parent)
 OgreWidget::~OgreWidget()
 {
 	if (mWindow)
-        mWindow->removeAllViewports();
-    if (mRoot)
+		mWindow->removeAllViewports();
+	if (mRoot)
 	{
-        mRoot->detachRenderTarget(mWindow);
-        if(mSceneMgr)
-            mRoot->destroySceneManager(mSceneMgr);
-    }
+		mRoot->detachRenderTarget(mWindow);
+		if(mSceneMgr)
+			mRoot->destroySceneManager(mSceneMgr);
+	}
 
 	delete mRoot;
 }
@@ -92,10 +92,10 @@ bool OgreWidget::setup()
 	createViewports();
 
 	// Load resources
-    loadResources();
+	loadResources();
 
-    // Create the scene
-    createScene();
+	// Create the scene
+	createScene();
 
 	return true;
 }
@@ -103,26 +103,26 @@ bool OgreWidget::setup()
 void OgreWidget::setupResources()
 {
 	// Load resource paths from config file
-    Ogre::ConfigFile cf;
-    cf.load("resources.cfg");
+	Ogre::ConfigFile cf;
+	cf.load("resources.cfg");
 
-    // Go through all sections & settings in the file
-    Ogre::ConfigFile::SectionIterator seci = cf.getSectionIterator();
+	// Go through all sections & settings in the file
+	Ogre::ConfigFile::SectionIterator seci = cf.getSectionIterator();
 
-    Ogre::String secName, typeName, archName;
-    while (seci.hasMoreElements())
-    {
-        secName = seci.peekNextKey();
-        Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
-        Ogre::ConfigFile::SettingsMultiMap::iterator i;
-        for (i = settings->begin(); i != settings->end(); ++i)
-        {
-            typeName = i->first;
-            archName = i->second;
-            Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-                archName, typeName, secName);
-        }
-    }
+	Ogre::String secName, typeName, archName;
+	while (seci.hasMoreElements())
+	{
+		secName = seci.peekNextKey();
+		Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
+		Ogre::ConfigFile::SettingsMultiMap::iterator i;
+		for (i = settings->begin(); i != settings->end(); ++i)
+		{
+			typeName = i->first;
+			archName = i->second;
+			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+				archName, typeName, secName);
+		}
+	}
 }
 
 bool OgreWidget::configure()
@@ -131,7 +131,7 @@ bool OgreWidget::configure()
 	Ogre::NameValuePairList params;
 
 	Ogre::RenderSystem *mRenderSystem = mRoot->getRenderSystemByName("OpenGL Rendering Subsystem");
-    mRoot->setRenderSystem(mRenderSystem);
+	mRoot->setRenderSystem(mRenderSystem);
 
 	mRoot->initialise(false);
 
@@ -150,30 +150,30 @@ bool OgreWidget::configure()
 void OgreWidget::chooseSceneManager()
 {
 	// Get the SceneManager, in this case a generic one
-    mSceneMgr = mRoot->createSceneManager(Ogre::ST_GENERIC);
+	mSceneMgr = mRoot->createSceneManager(Ogre::ST_GENERIC);
 }
 
 void OgreWidget::createCamera()
 {
-    // Create the camera
-    mCamera = mSceneMgr->createCamera("PlayerCam");
+	// Create the camera
+	mCamera = mSceneMgr->createCamera("PlayerCam");
 
-    // Set the position of camera
+	// Set the position of camera
 	mCamera->setPosition(Ogre::Vector3(0, 50, 150));
 
-    // Look forward along Y
+	// Look forward along Y
 	mCamera->lookAt(Ogre::Vector3(0, 50, 0));
-    // mCamera->setNearClipDistance(5);
+	// mCamera->setNearClipDistance(5);
 }
 
 void OgreWidget::createViewports()
 {
-    // Create one viewport, entire window
-    mViewport = mWindow->addViewport(mCamera);
-    mViewport->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
+	// Create one viewport, entire window
+	mViewport = mWindow->addViewport(mCamera);
+	mViewport->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 
-    // Alter the camera aspect ratio to match the viewport
-    mCamera->setAspectRatio(Ogre::Real(width()) / Ogre::Real(height()));
+	// Alter the camera aspect ratio to match the viewport
+	mCamera->setAspectRatio(Ogre::Real(width()) / Ogre::Real(height()));
 	// mCamera->setAspectRatio(Ogre::Real(mViewport->getActualWidth()) / Ogre::Real(mViewport->getActualHeight()));
 }
 
