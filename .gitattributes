@@ -6,6 +6,7 @@
 *.cfg text
 *.cpp text
 *.h   text
+*.txt text
 
 # Declare files that will always have CRLF line endings on checkout.
 *.bat     text eol=crlf
