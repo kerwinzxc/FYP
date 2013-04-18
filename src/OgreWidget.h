@@ -25,9 +25,9 @@ protected:
 	virtual void chooseSceneManager();
 	virtual void createCamera();
 	virtual void createViewports();
-	virtual void createScene() = 0;
 	virtual void loadResources();
 	virtual void render();
+	virtual void createScene();
 
 	Ogre::Root         *mRoot;
 	Ogre::RenderWindow *mWindow;

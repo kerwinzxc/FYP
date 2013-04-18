@@ -189,3 +189,7 @@ void OgreWidget::render()
 	mRoot->_fireFrameRenderingQueued();
 	mRoot->_fireFrameEnded();
 }
+
+void OgreWidget::createScene()
+{
+}
