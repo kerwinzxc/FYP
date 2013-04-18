@@ -23,6 +23,7 @@ void ObjLoader::HandleStream(Ogre::FileHandleDataStream* stream)
 	std::vector<Ogre::Vector2> textureCoords;
 
 	Ogre::uint32 count = 0;
+	bool hasTextures = true, hasNormals = true;
 
 	while (!stream->eof())
 	{
@@ -50,10 +51,51 @@ void ObjLoader::HandleStream(Ogre::FileHandleDataStream* stream)
 		{
 			Ogre::StringVector vec = Ogre::StringUtil::tokenise(str.substr(2), " ", "/");
 
-			if (vec.size() != 9)
-				exit(0);
+			switch (vec.size())
+			{
+			case 9:
+				break;
+			case 6:
+				hasNormals = false;
+				vec.resize(9);
+				vec[8] = "0";
+				vec[7] = vec[5];
+				vec[6] = vec[4];
+				vec[5] = "0";
+				vec[4] = vec[3];
+				vec[3] = vec[2];
+				vec[2] = "0";
+				break;
+			case 4:
+				hasTextures = false;
+				vec.resize(9);
+				vec[8] = vec[3];
+				vec[7] = "0";
+				vec[6] = Ogre::StringUtil::tokenise(vec[2], " ")[1];
+				vec[5] = Ogre::StringUtil::tokenise(vec[2], " ")[0];
+				vec[4] = "0";
+				vec[3] = Ogre::StringUtil::tokenise(vec[1], " ")[1];
+				vec[2] = Ogre::StringUtil::tokenise(vec[1], " ")[0];
+				vec[1] = "0";
+				break;
+			case 3:
+				hasNormals = false;
+				hasTextures = false;
+				vec.resize(9);
+				vec[8] = "0";
+				vec[7] = "0";
+				vec[6] = vec[2];
+				vec[5] = "0";
+				vec[4] = "0";
+				vec[3] = vec[1];
+				vec[2] = "0";
+				vec[1] = "0";
+				break;
+			default:
+				exit(1);
+			}
 
-			Ogre::uint32 Indices[3][3];
+			int Indices[3][3];
 
 			for (Ogre::uint32 i = 0; i < 3; i++)
 				for (Ogre::uint32 j = 0; j < 3; j++)
@@ -64,8 +106,8 @@ void ObjLoader::HandleStream(Ogre::FileHandleDataStream* stream)
 			for (Ogre::uint32 i = 0; i < 3; i++)
 			{
 				obj->position(vertices[Indices[i][0]]);
-				obj->textureCoord(textureCoords[Indices[i][1]]);
-				obj->normal(normals[Indices[i][2]]);
+				if (hasTextures) obj->textureCoord(textureCoords[Indices[i][1]]);
+				if (hasNormals)  obj->normal(normals[Indices[i][2]]);
 			}
 
 			obj->index(count++);
