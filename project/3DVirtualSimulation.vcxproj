@@ -105,6 +105,7 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
     </ClCompile>
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\MainWindow.cpp" />
+    <ClCompile Include="..\src\ObjLoader.cpp" />
     <ClCompile Include="..\src\OgreWidget.cpp" />
     <ClCompile Include="..\src\PhysX.cpp" />
   </ItemGroup>
@@ -143,6 +144,9 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I..\externals\OgreSDK\include" "-I..\externals\OgreSDK\include\OGRE" "-I..\externals\boost"</Command>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\ObjLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,7 @@
 #include <QtGui>
 
 #include "OgreWidget.h"
+#include "ObjLoader.h"
 
 OgreWidget::OgreWidget(QWidget *parent)
 	: QWidget(parent),
@@ -192,4 +193,6 @@ void OgreWidget::render()
 
 void OgreWidget::createScene()
 {
+	ObjLoader *treeLoader = new ObjLoader("../media/models/tree.obj", mSceneMgr);
+	mSceneMgr->getRootSceneNode()->attachObject(treeLoader->obj);
 }
