@@ -1,0 +1,28 @@
+# Alias Wavefront MTL File Exported from SketchUp
+# with OBJexporter (c) 2010-2011 TIG
+# Made for 'tree.obj'
+
+newmtl Default_Material
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ns 0
+d 1.000000
+
+newmtl Wood__Floor
+Ka 0.607843 0.411765 0.239216
+Kd 0.607843 0.411765 0.239216
+Ks 0.333333 0.333333 0.333333
+Ns 0
+d 1.000000
+map_Kd tree_Textures/Wood__Floor.PNG
+
+newmtl Vegetation_Blur7
+Ka 0.325490 0.447059 0.070588
+Kd 0.325490 0.447059 0.070588
+Ks 0.333333 0.333333 0.333333
+Ns 0
+d 1.000000
+map_Kd tree_Textures/Vegetation_Blur7.PNG
+
+#EOF

@@ -1,0 +1,19 @@
+# Alias Wavefront MTL File Exported from SketchUp
+# with OBJexporter (c) 2010-2011 TIG
+# Made for 'leaf.obj'
+
+newmtl Default_Material
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ns 0
+d 1.000000
+
+newmtl Color_G08
+Ka 0.556863 0.800000 0.317647
+Kd 0.556863 0.800000 0.317647
+Ks 0.333333 0.333333 0.333333
+Ns 0
+d 1.000000
+
+#EOF
