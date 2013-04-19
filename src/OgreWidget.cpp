@@ -193,6 +193,7 @@ void OgreWidget::render()
 
 void OgreWidget::createScene()
 {
-	ObjLoader *treeLoader = new ObjLoader("../media/models/tree.obj", mSceneMgr);
-	mSceneMgr->getRootSceneNode()->attachObject(treeLoader->obj);
+	Ogre::MeshPtr tree = ObjLoader::loadObj("../media/models/tree.obj");
+	Ogre::Entity *treeEntity = mSceneMgr->createEntity(tree);
+	mSceneMgr->getRootSceneNode()->attachObject(treeEntity);
 }

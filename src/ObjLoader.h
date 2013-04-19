@@ -6,15 +6,13 @@
 class ObjLoader
 {
 public:
-	ObjLoader(const Ogre::String& path, Ogre::SceneManager* mSceneMgr);
-	~ObjLoader();
-
-	Ogre::String        name;
-	Ogre::SceneManager* mSceneMgr;
-	Ogre::ManualObject* obj;
+	static Ogre::MeshPtr loadObj(const Ogre::String& path);
 
 private:
-	void HandleStream(Ogre::FileHandleDataStream* stream);
+	ObjLoader();
+	~ObjLoader();
+
+	static Ogre::MeshPtr HandleStream(Ogre::FileHandleDataStream* stream, Ogre::String& name);
 };
 
 #endif

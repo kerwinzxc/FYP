@@ -1,23 +1,25 @@
 #include "ObjLoader.h"
 
-ObjLoader::ObjLoader(const Ogre::String& path, Ogre::SceneManager* mSceneMgr)
+ObjLoader::ObjLoader()
 {
-	this->mSceneMgr = mSceneMgr;
-
-	Ogre::String ext, outPath;
-	Ogre::StringUtil::splitFullFilename(path, name, ext, outPath);
-
-	Ogre::FileHandleDataStream *stream = new Ogre::FileHandleDataStream(fopen(path.c_str(), "rb"));
-	HandleStream(stream);
 }
 
 ObjLoader::~ObjLoader()
 {
 }
 
-void ObjLoader::HandleStream(Ogre::FileHandleDataStream* stream)
+Ogre::MeshPtr ObjLoader::loadObj(const Ogre::String& path)
 {
-	obj = this->mSceneMgr->createManualObject(name);
+	Ogre::String name, ext, outPath;
+	Ogre::StringUtil::splitFullFilename(path, name, ext, outPath);
+
+	Ogre::FileHandleDataStream *stream = new Ogre::FileHandleDataStream(fopen(path.c_str(), "rb"));
+	return HandleStream(stream, name);
+}
+
+Ogre::MeshPtr ObjLoader::HandleStream(Ogre::FileHandleDataStream* stream, Ogre::String& name)
+{
+	Ogre::ManualObject *obj = new Ogre::ManualObject(name);
 
 	std::vector<Ogre::Vector3> vertices, normals;
 	std::vector<Ogre::Vector2> textureCoords;
@@ -123,4 +125,9 @@ void ObjLoader::HandleStream(Ogre::FileHandleDataStream* stream)
 	textureCoords.swap(std::vector<Ogre::Vector2>());
 
 	stream->close();
+
+	Ogre::MeshPtr mesh = obj->convertToMesh(name);
+	delete obj;
+
+	return mesh;
 }
