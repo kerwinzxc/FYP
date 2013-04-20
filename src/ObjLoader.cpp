@@ -8,18 +8,19 @@ ObjLoader::~ObjLoader()
 {
 }
 
-Ogre::MeshPtr ObjLoader::loadObj(const Ogre::String& path)
+Ogre::MeshPtr ObjLoader::loadObj(const Ogre::String& filename)
 {
-	Ogre::String name, ext, outPath;
-	Ogre::StringUtil::splitFullFilename(path, name, ext, outPath);
+	Ogre::String name, ext;
+	Ogre::StringUtil::splitBaseFilename(filename, name, ext);
 
-	Ogre::FileHandleDataStream *stream = new Ogre::FileHandleDataStream(fopen(path.c_str(), "rb"));
+	Ogre::DataStreamPtr stream = Ogre::ResourceGroupManager::getSingleton().openResource(filename);
+	
 	return HandleStream(stream, name);
 }
 
-Ogre::MeshPtr ObjLoader::HandleStream(Ogre::FileHandleDataStream* stream, Ogre::String& name)
+Ogre::MeshPtr ObjLoader::HandleStream(Ogre::DataStreamPtr stream, Ogre::String& name)
 {
-	Ogre::ManualObject *obj = new Ogre::ManualObject(name);
+	Ogre::ManualObject *obj = OGRE_NEW Ogre::ManualObject(name);
 
 	std::vector<Ogre::Vector3> vertices, normals;
 	std::vector<Ogre::Vector2> textureCoords;
@@ -127,7 +128,7 @@ Ogre::MeshPtr ObjLoader::HandleStream(Ogre::FileHandleDataStream* stream, Ogre::
 	stream->close();
 
 	Ogre::MeshPtr mesh = obj->convertToMesh(name);
-	delete obj;
+	OGRE_DELETE obj;
 
 	return mesh;
 }

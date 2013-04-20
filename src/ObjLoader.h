@@ -6,13 +6,13 @@
 class ObjLoader
 {
 public:
-	static Ogre::MeshPtr loadObj(const Ogre::String& path);
+	static Ogre::MeshPtr loadObj(const Ogre::String& filename);
 
 private:
 	ObjLoader();
 	~ObjLoader();
 
-	static Ogre::MeshPtr HandleStream(Ogre::FileHandleDataStream* stream, Ogre::String& name);
+	static Ogre::MeshPtr HandleStream(Ogre::DataStreamPtr stream, Ogre::String& name);
 };
 
 #endif

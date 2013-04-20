@@ -27,7 +27,7 @@ OgreWidget::~OgreWidget()
 			mRoot->destroySceneManager(mSceneMgr);
 	}
 
-	delete mRoot;
+	OGRE_DELETE mRoot;
 }
 
 QSize OgreWidget::sizeHint() const
@@ -81,7 +81,7 @@ void OgreWidget::timerEvent(QTimerEvent *evt)
 
 bool OgreWidget::setup()
 {
-	mRoot = new Ogre::Root(mPluginsCfg);
+	mRoot = OGRE_NEW Ogre::Root(mPluginsCfg);
 
 	setupResources();
 
@@ -193,7 +193,7 @@ void OgreWidget::render()
 
 void OgreWidget::createScene()
 {
-	Ogre::MeshPtr tree = ObjLoader::loadObj("../media/models/tree.obj");
+	Ogre::MeshPtr tree = ObjLoader::loadObj("tree.obj");
 	Ogre::Entity *treeEntity = mSceneMgr->createEntity(tree);
 	mSceneMgr->getRootSceneNode()->attachObject(treeEntity);
 }
