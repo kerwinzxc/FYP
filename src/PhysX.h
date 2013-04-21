@@ -9,16 +9,13 @@
 
 class PhysX : public OgreWidget
 {
-	Q_OBJECT
-
 public:
-	PhysX(QWidget* parent = 0);
+	PhysX();
 	~PhysX();
 
 protected:
-	void timerEvent(QTimerEvent *evt);
-
 	void createScene();
+	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
 	void initPhysX();
 	void createTree();
