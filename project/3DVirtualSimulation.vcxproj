@@ -24,18 +24,21 @@
     <LocalDebuggerEnvironment>PATH=..\externals\PhysXSDK\Bin\$(Platform);..\externals\OgreSDK\Bin\$(Configuration);
 $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <LocalDebuggerEnvironment>PATH=..\externals\PhysXSDK\Bin\$(Platform);..\externals\OgreSDK\Bin\$(Configuration);
 $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <LocalDebuggerEnvironment>PATH=..\externals\PhysXSDK\Bin\$(Platform);..\externals\OgreSDK\Bin\Release;
 $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -72,7 +75,7 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\externals\OgreSDK\include;..\externals\OgreSDK\include\OGRE;..\externals\boost;..\externals\PhysXSDK\Graphics\include\win32;..\externals\PhysXSDK\SDKs\Cooking\include;..\externals\PhysXSDK\SDKs\Foundation\include;..\externals\PhysXSDK\SDKs\Foundation\include\win;..\externals\PhysXSDK\SDKs\NxCharacter\include;..\externals\PhysXSDK\SDKs\Physics\include;..\externals\PhysXSDK\SDKs\PhysXLoader\include;..\externals\PhysXSDK\Samples\SampleCommonCode\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\externals\OgreSDK\include\OGRE;..\externals\OgreSDK\include\OIS;..\externals\boost;..\externals\PhysXSDK\Graphics\include\win32;..\externals\PhysXSDK\SDKs\Cooking\include;..\externals\PhysXSDK\SDKs\Foundation\include;..\externals\PhysXSDK\SDKs\Foundation\include\win;..\externals\PhysXSDK\SDKs\NxCharacter\include;..\externals\PhysXSDK\SDKs\Physics\include;..\externals\PhysXSDK\SDKs\PhysXLoader\include;..\externals\PhysXSDK\Samples\SampleCommonCode\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -83,13 +86,13 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>..\externals\OgreSDK\lib\$(Configuration);..\externals\boost\lib;..\externals\PhysXSDK\SDKs\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain_d.lib;NxCharacterCHECKED.lib;PhysXCookingCHECKED.lib;PhysXCore.lib;PhysXLoaderCHECKED.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain_d.lib;OIS_d.lib;NxCharacterCHECKED.lib;PhysXCookingCHECKED.lib;PhysXCore.lib;PhysXLoaderCHECKED.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\externals\OgreSDK\include;..\externals\OgreSDK\include\OGRE;..\externals\boost;..\externals\PhysXSDK\Graphics\include\win32;..\externals\PhysXSDK\SDKs\Cooking\include;..\externals\PhysXSDK\SDKs\Foundation\include;..\externals\PhysXSDK\SDKs\Foundation\include\win;..\externals\PhysXSDK\SDKs\NxCharacter\include;..\externals\PhysXSDK\SDKs\Physics\include;..\externals\PhysXSDK\SDKs\PhysXLoader\include;..\externals\PhysXSDK\Samples\SampleCommonCode\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\externals\OgreSDK\include\OGRE;..\externals\OgreSDK\include\OIS;..\externals\boost;..\externals\PhysXSDK\Graphics\include\win32;..\externals\PhysXSDK\SDKs\Cooking\include;..\externals\PhysXSDK\SDKs\Foundation\include;..\externals\PhysXSDK\SDKs\Foundation\include\win;..\externals\PhysXSDK\SDKs\NxCharacter\include;..\externals\PhysXSDK\SDKs\Physics\include;..\externals\PhysXSDK\SDKs\PhysXLoader\include;..\externals\PhysXSDK\Samples\SampleCommonCode\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>
       </DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -100,13 +103,13 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>..\externals\OgreSDK\lib\$(Configuration);..\externals\boost\lib;..\externals\PhysXSDK\SDKs\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain.lib;NxCharacter.lib;PhysXCooking.lib;PhysXCore.lib;PhysXLoader.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain.lib;OIS.lib;NxCharacter.lib;PhysXCooking.lib;PhysXCore.lib;PhysXLoader.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\externals\OgreSDK\include;..\externals\OgreSDK\include\OGRE;..\externals\boost;..\externals\PhysXSDK\Graphics\include\win32;..\externals\PhysXSDK\SDKs\Cooking\include;..\externals\PhysXSDK\SDKs\Foundation\include;..\externals\PhysXSDK\SDKs\Foundation\include\win;..\externals\PhysXSDK\SDKs\NxCharacter\include;..\externals\PhysXSDK\SDKs\Physics\include;..\externals\PhysXSDK\SDKs\PhysXLoader\include;..\externals\PhysXSDK\Samples\SampleCommonCode\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\externals\OgreSDK\include\OGRE;..\externals\OgreSDK\include\OIS;..\externals\boost;..\externals\PhysXSDK\Graphics\include\win32;..\externals\PhysXSDK\SDKs\Cooking\include;..\externals\PhysXSDK\SDKs\Foundation\include;..\externals\PhysXSDK\SDKs\Foundation\include\win;..\externals\PhysXSDK\SDKs\NxCharacter\include;..\externals\PhysXSDK\SDKs\Physics\include;..\externals\PhysXSDK\SDKs\PhysXLoader\include;..\externals\PhysXSDK\Samples\SampleCommonCode\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
@@ -116,7 +119,7 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>..\externals\OgreSDK\lib\release;..\externals\boost\lib;..\externals\PhysXSDK\SDKs\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain.lib;NxCharacter.lib;PhysXCooking.lib;PhysXCore.lib;PhysXLoader.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain.lib;OIS.lib;NxCharacter.lib;PhysXCooking.lib;PhysXCore.lib;PhysXLoader.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
@@ -124,13 +127,19 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
   <ItemGroup>
     <ClCompile Include="..\externals\PhysXSDK\Samples\SampleCommonCode\src\MeshHash.cpp" />
     <ClCompile Include="..\externals\PhysXSDK\Samples\SampleCommonCode\src\Stream.cpp" />
+    <ClCompile Include="..\src\BaseApplication.cpp" />
     <ClCompile Include="..\src\ObjLoader.cpp" />
+    <ClCompile Include="..\src\OgreWidget.cpp" />
+    <ClCompile Include="..\src\PhysX.cpp" />
     <ClCompile Include="..\src\SoftBodyMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\externals\PhysXSDK\Samples\SampleCommonCode\src\MeshHash.h" />
     <ClInclude Include="..\externals\PhysXSDK\Samples\SampleCommonCode\src\Stream.h" />
+    <ClInclude Include="..\src\BaseApplication.h" />
     <ClInclude Include="..\src\ObjLoader.h" />
+    <ClInclude Include="..\src\OgreWidget.h" />
+    <ClInclude Include="..\src\PhysX.h" />
     <ClInclude Include="..\src\SoftBodyMesh.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

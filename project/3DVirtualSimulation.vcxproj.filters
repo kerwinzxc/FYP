@@ -23,6 +23,15 @@
     <ClCompile Include="..\externals\PhysXSDK\Samples\SampleCommonCode\src\Stream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\BaseApplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\OgreWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PhysX.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ObjLoader.h">
@@ -35,6 +44,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\externals\PhysXSDK\Samples\SampleCommonCode\src\Stream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\BaseApplication.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\OgreWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PhysX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
