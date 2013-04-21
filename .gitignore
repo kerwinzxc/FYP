@@ -8,4 +8,5 @@ ipch/
 *.sdf
 *.suo
 *.user
+ogre.cfg
 Ogre.log

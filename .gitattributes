@@ -22,3 +22,4 @@
 *.lib  binary
 *.mesh binary
 *.png  binary
+*.zip  binary
