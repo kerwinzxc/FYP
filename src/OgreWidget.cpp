@@ -1,7 +1,6 @@
 #include <QtGui>
 
 #include "OgreWidget.h"
-#include "ObjLoader.h"
 
 OgreWidget::OgreWidget(QWidget *parent)
 	: QWidget(parent),
@@ -10,8 +9,10 @@ OgreWidget::OgreWidget(QWidget *parent)
 	  mSceneMgr(0),
 	  mCamera(0),
 	  mViewport(0),
-	  mPluginsCfg(Ogre::StringUtil::BLANK)
+	  mPluginsCfg(Ogre::StringUtil::BLANK),
+	  mTreeEntity(0)
 {
+	mTreeLoader = NULL;
 	setAttribute(Qt::WA_OpaquePaintEvent);
 	setAttribute(Qt::WA_NoSystemBackground);
 }
@@ -27,6 +28,7 @@ OgreWidget::~OgreWidget()
 			mRoot->destroySceneManager(mSceneMgr);
 	}
 
+	delete mTreeLoader;
 	OGRE_DELETE mRoot;
 }
 
@@ -193,7 +195,8 @@ void OgreWidget::render()
 
 void OgreWidget::createScene()
 {
-	Ogre::MeshPtr tree = ObjLoader::loadObj("tree.obj");
-	Ogre::Entity *treeEntity = mSceneMgr->createEntity(tree);
-	mSceneMgr->getRootSceneNode()->attachObject(treeEntity);
+	mTreeLoader = new ObjLoader();
+	Ogre::MeshPtr tree = mTreeLoader->loadObj("tree.obj");
+	mTreeEntity = mSceneMgr->createEntity(tree);
+	mSceneMgr->getRootSceneNode()->attachObject(mTreeEntity);
 }

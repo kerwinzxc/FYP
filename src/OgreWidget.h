@@ -5,6 +5,8 @@
 
 #include <Ogre.h>
 
+#include "ObjLoader.h"
+
 class OgreWidget : public QWidget
 {
 	Q_OBJECT
@@ -35,6 +37,9 @@ protected:
 	Ogre::Camera       *mCamera;
 	Ogre::Viewport     *mViewport;
 	Ogre::String        mPluginsCfg;
+
+	Ogre::Entity       *mTreeEntity;
+	ObjLoader          *mTreeLoader;
 
 private:
 	QSize sizeHint() const;

@@ -6,6 +6,9 @@ ObjLoader::ObjLoader()
 
 ObjLoader::~ObjLoader()
 {
+	for (Ogre::uint32 i = 0; i < mIndexLinks.size(); i++)
+		mIndexLinks[i].swap(std::vector<unsigned int>());
+	mIndexLinks.swap(std::vector<std::vector<unsigned int>>());
 }
 
 Ogre::MeshPtr ObjLoader::loadObj(const Ogre::String& filename)
@@ -14,18 +17,18 @@ Ogre::MeshPtr ObjLoader::loadObj(const Ogre::String& filename)
 	Ogre::StringUtil::splitBaseFilename(filename, name, ext);
 
 	Ogre::DataStreamPtr stream = Ogre::ResourceGroupManager::getSingleton().openResource(filename);
-	
-	return HandleStream(stream, name);
+
+	return handleStream(stream, name);
 }
 
-Ogre::MeshPtr ObjLoader::HandleStream(Ogre::DataStreamPtr stream, Ogre::String& name)
+Ogre::MeshPtr ObjLoader::handleStream(Ogre::DataStreamPtr stream, Ogre::String& name)
 {
 	Ogre::ManualObject *obj = OGRE_NEW Ogre::ManualObject(name);
 
 	std::vector<Ogre::Vector3> vertices, normals;
 	std::vector<Ogre::Vector2> textureCoords;
 
-	Ogre::uint32 count = 0;
+	unsigned int count = 0, submesh = 0, vertexCount = 0;
 	bool hasTextures = true, hasNormals = true;
 
 	while (!stream->eof())
@@ -35,12 +38,19 @@ Ogre::MeshPtr ObjLoader::HandleStream(Ogre::DataStreamPtr stream, Ogre::String& 
 		if (Ogre::StringUtil::startsWith(str, "usemtl "))
 		{
 			if (obj->getNumSections() != 0)
+			{
 				obj->end();
+				count = 0;
+				submesh++;
+			}
 			obj->begin(str.substr(7));
 		}
 		else if (Ogre::StringUtil::startsWith(str, "v "))
 		{
 			vertices.push_back(Ogre::StringConverter::parseVector3(str.substr(2)));
+
+			mIndexLinks.resize(++vertexCount);
+			mIndexLinks[vertexCount - 1].push_back(submesh);
 		}
 		else if (Ogre::StringUtil::startsWith(str, "vn "))
 		{
@@ -113,9 +123,12 @@ Ogre::MeshPtr ObjLoader::HandleStream(Ogre::DataStreamPtr stream, Ogre::String& 
 				if (hasNormals)  obj->normal(normals[Indices[i][2]]);
 			}
 
-			obj->index(count++);
-			obj->index(count++);
-			obj->index(count++);
+			obj->index(count);
+			mIndexLinks[Indices[0][0]].push_back(count++);
+			obj->index(count);
+			mIndexLinks[Indices[1][0]].push_back(count++);
+			obj->index(count);
+			mIndexLinks[Indices[2][0]].push_back(count++);
 		}
 	}
 	if (obj->getNumSections() != 0)
