@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugRelease|Win32">
+      <Configuration>DebugRelease</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -27,6 +31,12 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
 $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin;..\externals\PhysXSDK\Bin\$(Platform);..\externals\OgreSDK\Bin\Release;..\externals\nxogre\bin;
+$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -36,6 +46,9 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
@@ -43,17 +56,23 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'" />
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\bin\$(Platform)\$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\bin\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">..\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\build\$(Platform)\$(Configuration)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\build\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">..\build\$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName);.\..\build\GeneratedFiles;..\externals\OgreSDK\include;..\externals\OgreSDK\include\OGRE;..\externals\boost;..\externals\PhysXSDK\Graphics\include\win32;..\externals\PhysXSDK\SDKs\Cooking\include;..\externals\PhysXSDK\SDKs\Foundation\include;..\externals\PhysXSDK\SDKs\Foundation\include\win;..\externals\PhysXSDK\SDKs\NxCharacter\include;..\externals\PhysXSDK\SDKs\Physics\include;..\externals\PhysXSDK\SDKs\PhysXLoader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName);.\..\build\GeneratedFiles;..\externals\OgreSDK\include;..\externals\OgreSDK\include\OGRE;..\externals\boost;..\externals\PhysXSDK\Graphics\include\win32;..\externals\PhysXSDK\SDKs\Cooking\include;..\externals\PhysXSDK\SDKs\Foundation\include;..\externals\PhysXSDK\SDKs\Foundation\include\win;..\externals\PhysXSDK\SDKs\NxCharacter\include;..\externals\PhysXSDK\SDKs\Physics\include;..\externals\PhysXSDK\SDKs\PhysXLoader\include;..\externals\PhysXSDK\Samples\SampleCommonCode\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -70,7 +89,7 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName);.\..\build\GeneratedFiles;..\externals\OgreSDK\include;..\externals\OgreSDK\include\OGRE;..\externals\boost;..\externals\PhysXSDK\Graphics\include\win32;..\externals\PhysXSDK\SDKs\Cooking\include;..\externals\PhysXSDK\SDKs\Foundation\include;..\externals\PhysXSDK\SDKs\Foundation\include\win;..\externals\PhysXSDK\SDKs\NxCharacter\include;..\externals\PhysXSDK\SDKs\Physics\include;..\externals\PhysXSDK\SDKs\PhysXLoader\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName);.\..\build\GeneratedFiles;..\externals\OgreSDK\include;..\externals\OgreSDK\include\OGRE;..\externals\boost;..\externals\PhysXSDK\Graphics\include\win32;..\externals\PhysXSDK\SDKs\Cooking\include;..\externals\PhysXSDK\SDKs\Foundation\include;..\externals\PhysXSDK\SDKs\Foundation\include\win;..\externals\PhysXSDK\SDKs\NxCharacter\include;..\externals\PhysXSDK\SDKs\Physics\include;..\externals\PhysXSDK\SDKs\PhysXLoader\include;..\externals\PhysXSDK\Samples\SampleCommonCode\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>
       </DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -84,14 +103,39 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
       <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;OgreMain.lib;NxCharacter.lib;PhysXCooking.lib;PhysXCore.lib;PhysXLoader.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName);.\..\build\GeneratedFiles;..\externals\OgreSDK\include;..\externals\OgreSDK\include\OGRE;..\externals\boost;..\externals\PhysXSDK\Graphics\include\win32;..\externals\PhysXSDK\SDKs\Cooking\include;..\externals\PhysXSDK\SDKs\Foundation\include;..\externals\PhysXSDK\SDKs\Foundation\include\win;..\externals\PhysXSDK\SDKs\NxCharacter\include;..\externals\PhysXSDK\SDKs\Physics\include;..\externals\PhysXSDK\SDKs\PhysXLoader\include;..\externals\PhysXSDK\Samples\SampleCommonCode\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;..\externals\OgreSDK\lib\release;..\externals\boost\lib;..\externals\PhysXSDK\SDKs\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;OgreMain.lib;NxCharacter.lib;PhysXCooking.lib;PhysXCore.lib;PhysXLoader.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\build\GeneratedFiles\Win32\DebugRelease\moc_PhysX.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\build\GeneratedFiles\Win32\Debug\moc_MainWindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\build\GeneratedFiles\Win32\Debug\moc_OgreWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\build\GeneratedFiles\Win32\Debug\moc_PhysX.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\build\GeneratedFiles\Win32\Release\moc_MainWindow.cpp">
@@ -101,24 +145,32 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\build\GeneratedFiles\Win32\Release\moc_PhysX.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\externals\PhysXSDK\Samples\SampleCommonCode\src\MeshHash.cpp" />
+    <ClCompile Include="..\externals\PhysXSDK\Samples\SampleCommonCode\src\Stream.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\MainWindow.cpp" />
     <ClCompile Include="..\src\ObjLoader.cpp" />
     <ClCompile Include="..\src\OgreWidget.cpp" />
     <ClCompile Include="..\src\PhysX.cpp" />
+    <ClCompile Include="..\src\SoftBodyMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\src\MainWindow.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing MainWindow.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include" "-I.\..\externals\PhysXSDK\Samples\SampleCommonCode\src"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing MainWindow.h...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">Moc%27ing MainWindow.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include" "-I.\..\externals\PhysXSDK\Samples\SampleCommonCode\src"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include" "-I.\..\externals\PhysXSDK\Samples\SampleCommonCode\src"</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -126,27 +178,38 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing OgreWidget.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include" "-I.\..\externals\PhysXSDK\Samples\SampleCommonCode\src"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing OgreWidget.h...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">Moc%27ing OgreWidget.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include" "-I.\..\externals\PhysXSDK\Samples\SampleCommonCode\src"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include" "-I.\..\externals\PhysXSDK\Samples\SampleCommonCode\src"</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\src\PhysX.h">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing PhysX.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include" "-I.\..\externals\PhysXSDK\Samples\SampleCommonCode\src"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing PhysX.h...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">Moc%27ing PhysX.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB  "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include" "-I.\..\externals\PhysXSDK\Samples\SampleCommonCode\src"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='DebugRelease|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\build\GeneratedFiles\$(PlatformName)\$(ConfigurationName)\." "-I.\..\build\GeneratedFiles" "-I.\..\externals\OgreSDK\include" "-I.\..\externals\OgreSDK\include\OGRE" "-I.\..\externals\boost" "-I.\..\externals\PhysXSDK\Graphics\include\win32" "-I.\..\externals\PhysXSDK\SDKs\Cooking\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include" "-I.\..\externals\PhysXSDK\SDKs\Foundation\include\win" "-I.\..\externals\PhysXSDK\SDKs\NxCharacter\include" "-I.\..\externals\PhysXSDK\SDKs\Physics\include" "-I.\..\externals\PhysXSDK\SDKs\PhysXLoader\include" "-I.\..\externals\PhysXSDK\Samples\SampleCommonCode\src"</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\externals\PhysXSDK\Samples\SampleCommonCode\src\MeshHash.h" />
+    <ClInclude Include="..\externals\PhysXSDK\Samples\SampleCommonCode\src\Stream.h" />
     <ClInclude Include="..\src\ObjLoader.h" />
+    <ClInclude Include="..\src\SoftBodyMesh.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
