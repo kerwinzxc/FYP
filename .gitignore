@@ -1,6 +1,6 @@
 # Directories
 bin/
-!externals/nxogre/bin/
+!externals/*/bin/
 build/
 ipch/
 # Files of a type
