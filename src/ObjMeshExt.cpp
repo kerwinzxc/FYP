@@ -1,5 +1,24 @@
 #include "ObjMeshExt.h"
 
+void ObjMeshExt::extractPath(char *filename)
+{
+	Ogre::String base, ext, path;
+	Ogre::StringUtil::splitFullFilename(filename, base, ext, path);
+	strncpy(mPath, path.c_str(), sizeof(mPath));
+	strncpy(mName, base.c_str(), sizeof(mName));
+	// strcpy(mPath, filename);
+	// int i = (int) strlen(mPath)-1;
+	// while (i >= 0 && mPath[i] != '\\' && mPath[i] != ':') i--;
+	// if (i >= 0) mPath[i] = '\0';
+	// else strcpy(mPath, ".");
+
+	// int j = 0;
+	// i++;
+	// while (i < (int)strlen(filename))
+	// 	mName[j++] = filename[i++];
+	// mName[j] = '\0';
+}
+
 void ObjMeshExt::parseRef(char *s, int nr[])
 {
 	int i,j,k;

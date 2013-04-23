@@ -8,6 +8,7 @@ class ObjMeshExt : public ObjMesh
 public:
 	ObjMeshExt() {clear();}
 
+	void extractPath(char *filename);
 	void parseRef(char *s, int nr[]);
 	bool loadFromObjFile(char *filename);
 
