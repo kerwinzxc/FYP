@@ -5,6 +5,7 @@ build/
 ipch/
 # Files of a type
 *.opensdf
+*.pyc
 *.sdf
 *.suo
 *.user
