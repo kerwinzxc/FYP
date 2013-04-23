@@ -10,7 +10,7 @@ public:
 	                  NxTriangleMeshShapeDesc &desc, char* objFilePath);
 	~PhysXTriangleMesh();
 
-	NxTriangleMesh* getNxTriangleMesh() {return mTriangleMesh;}
+	NxActor* getNxActor() {return mActor;}
 
 private:
 	bool saveMeshDesc(NxTriangleMeshDesc &desc, char* filepath);
