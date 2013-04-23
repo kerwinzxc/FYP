@@ -1,6 +1,8 @@
 #include "ObjLoader.h"
 
-ObjLoader::ObjLoader()
+ObjLoader::ObjLoader(size_t estimateCount, Ogre::uint32 multiple)
+	: mEstimateCount(estimateCount),
+	  mMultiple(multiple)
 {
 }
 
@@ -25,10 +27,25 @@ Ogre::MeshPtr ObjLoader::handleStream(Ogre::DataStreamPtr stream, Ogre::String& 
 {
 	Ogre::ManualObject *obj = OGRE_NEW Ogre::ManualObject(name);
 
-	std::vector<Ogre::Vector3> vertices, normals;
+	std::vector<Ogre::Vector3> vertices;
+	std::vector<Ogre::Vector3> normals;
 	std::vector<Ogre::Vector2> textureCoords;
 
-	unsigned int count = 0, submesh = 0, vertexCount = 0;
+	if (mEstimateCount != 0)
+	{
+		obj->estimateVertexCount(mEstimateCount * mMultiple);
+		obj->estimateIndexCount(mEstimateCount * mMultiple);
+
+		vertices.resize(mEstimateCount);
+		normals.resize(mEstimateCount);
+		textureCoords.resize(mEstimateCount);
+
+		vertices.clear();
+		normals.clear();
+		textureCoords.clear();
+	}
+
+	unsigned int count = 0, submesh = 0;
 	bool hasTextures = true, hasNormals = true;
 
 	while (!stream->eof())
@@ -49,8 +66,8 @@ Ogre::MeshPtr ObjLoader::handleStream(Ogre::DataStreamPtr stream, Ogre::String& 
 		{
 			vertices.push_back(Ogre::StringConverter::parseVector3(str.substr(2)));
 
-			mIndexLinks.resize(++vertexCount);
-			mIndexLinks[vertexCount - 1].push_back(submesh);
+			mIndexLinks.push_back(std::vector<unsigned int>());
+			mIndexLinks.back().push_back(submesh);
 		}
 		else if (Ogre::StringUtil::startsWith(str, "vn "))
 		{
