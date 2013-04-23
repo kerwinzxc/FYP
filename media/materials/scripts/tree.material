@@ -1,0 +1,43 @@
+material Vegetation_Blur7
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.32549 0.447059 0.070588 1
+			diffuse 0.32549 0.447059 0.070588 1
+			specular 0.333333 0.333333 0.333333 1 1
+			scene_blend one one_minus_src_alpha
+
+			texture_unit
+			{
+				texture Vegetation_Blur7.PNG
+			}
+		}
+
+	}
+
+}
+
+
+
+material Wood__Floor
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.607843 0.411765 0.239216 1
+			diffuse 0.607843 0.411765 0.239216 1
+			specular 0.333333 0.333333 0.333333 1 1
+			scene_blend one one_minus_src_alpha
+
+			texture_unit
+			{
+				texture Wood__Floor.PNG
+			}
+		}
+
+	}
+
+}

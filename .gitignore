@@ -1,0 +1,13 @@
+# Directories
+bin/
+!externals/*/bin/
+build/
+ipch/
+# Files of a type
+*.opensdf
+*.pyc
+*.sdf
+*.suo
+*.user
+ogre.cfg
+Ogre.log
