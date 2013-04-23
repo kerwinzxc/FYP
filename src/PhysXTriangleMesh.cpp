@@ -90,7 +90,7 @@ bool PhysXTriangleMesh::saveMeshDesc(NxTriangleMeshDesc &desc, char* filepath)
 
 			verts[j].x = vertex.x;
 			verts[j].y = vertex.y;
-			verts[j].z = vertex.z;			
+			verts[j].z = vertex.z;
 		}
 		for (; k <= triOffsets[i]; k++)
 		{
@@ -135,7 +135,6 @@ bool PhysXTriangleMesh::cookMesh(NxTriangleMeshDesc& desc)
 {
 	MemoryWriteBuffer wb;
 	assert(desc.isValid());
-	NxU32 i = desc.checkValid();
 
 	if (!NxCookTriangleMesh(desc, wb))
 		return false;
