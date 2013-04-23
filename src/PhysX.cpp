@@ -7,9 +7,10 @@ PhysX::PhysX()
 	mPhysicsSDK = NULL;
 	mCooking    = NULL;
 	mScene      = NULL;
+	mTerrian    = NULL;
 	mTree       = NULL;
 	mTreeMesh   = NULL;
-	mUseGPU = true;
+	mUseGPU     = true;
 }
 
 PhysX::~PhysX()
@@ -28,9 +29,8 @@ bool PhysX::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
 	bool ret = BaseApplication::frameRenderingQueued(evt);
 
-	mScene->simulate(0.016f);
-	mScene->fetchResults(NX_RIGID_BODY_FINISHED, true);
-	mTreeMesh->updateTetraLinks();
+	assert(mScene);
+	stepPhysX(evt.timeSinceLastFrame);
 
 	return ret;
 }
@@ -59,7 +59,86 @@ void PhysX::initPhysX()
 
 	assert(mScene != NULL);
 
+	createTerrian();
 	createTree();
+}
+
+void PhysX::stepPhysX(NxReal timeSinceLastFrame)
+{
+	mScene->simulate(timeSinceLastFrame);
+	mScene->fetchResults(NX_RIGID_BODY_FINISHED, true);
+	if (mTreeMesh)
+		mTreeMesh->updateTetraLinks();
+}
+
+void PhysX::createTerrian()
+{
+	if (mTerrian != NULL)
+	{
+		mScene->releaseActor(*mTerrian);
+		mTerrian = NULL;
+	}
+
+	NxArray<NxVec3>* vertices = new NxArray<NxVec3>();
+	NxArray<NxU32>*  indices  = new NxArray<NxU32>();
+
+	NxU32 count = 0;
+	for (int i = 0; i < mSceneEntity->getMesh()->getNumSubMeshes(); i++)
+	{
+		Ogre::SubMesh* submesh = mSceneEntity->getMesh()->getSubMesh(i);
+		Ogre::VertexData* vertexData = submesh->vertexData;
+		const Ogre::VertexElement* posElem = vertexData->vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
+		Ogre::HardwareVertexBufferSharedPtr vbuf = vertexData->vertexBufferBinding->getBuffer(posElem->getSource());
+		unsigned char* vertex = static_cast<unsigned char*>(vbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
+
+		Ogre::Real* pReal;
+		size_t offset = vbuf->getVertexSize();
+		for (size_t j = 0; j < vertexData->vertexCount; ++j, vertex += offset)
+		{
+			posElem->baseVertexPointerToElement(vertex, &pReal);
+			vertices->push_back(NxVec3(pReal[0], pReal[1], pReal[2]));
+			indices->push_back(count++);
+		}
+
+		vbuf->unlock();
+	}
+
+	vertices->resize(vertices->size());
+	indices->resize(indices->size());
+
+	NxTriangleMeshDesc terrainDesc;
+	terrainDesc.numVertices               = vertices->size();
+	terrainDesc.numTriangles              = count / 3;
+	terrainDesc.pointStrideBytes          = sizeof(NxVec3);
+	terrainDesc.triangleStrideBytes       = 3 * sizeof(NxU32);
+	terrainDesc.flags                     = 0;
+	terrainDesc.heightFieldVerticalAxis   = NX_Y;
+	terrainDesc.heightFieldVerticalExtent = 1000.0f;
+	terrainDesc.points                    = vertices->begin();
+	terrainDesc.triangles                 = indices->begin();
+
+	assert(terrainDesc.isValid());
+
+	assert(mCooking->NxInitCooking(0, 0));
+	MemoryWriteBuffer* wb = new MemoryWriteBuffer();
+	assert(mCooking->NxCookTriangleMesh(terrainDesc, *wb));
+	MemoryReadBuffer* rb = new MemoryReadBuffer(wb->data);
+	NxTriangleMesh* terrainMesh = mPhysicsSDK->createTriangleMesh(*rb);
+	mCooking->NxCloseCooking();
+
+	NxTriangleMeshShapeDesc terrainShapeDesc;
+	terrainShapeDesc.meshData   = terrainMesh;
+	terrainShapeDesc.shapeFlags = NX_SF_FEATURE_INDICES;
+
+	NxActorDesc ActorDesc;
+	ActorDesc.shapes.pushBack(&terrainShapeDesc);
+	ActorDesc.globalPose.t = NxVec3(0.0f,0.0f,0.0f);
+	mTerrian = mScene->createActor(ActorDesc);
+
+	if (terrainMesh->getReferenceCount() == 0)
+		mPhysicsSDK->releaseTriangleMesh(*terrainMesh);
+
+	delete wb, rb;
 }
 
 void PhysX::createTree()
@@ -73,7 +152,7 @@ void PhysX::createTree()
 	softBodyDesc.collisionResponseCoefficient   = 0.9f;
 	softBodyDesc.solverIterations               = 3;
 	softBodyDesc.flags |= NX_SBF_COLLISION_TWOWAY;
-	if(mUseGPU)
+	if (mUseGPU)
 		softBodyDesc.flags |= NX_SBF_HARDWARE;
 
 	NxSoftBodyMeshDesc meshDesc;
@@ -83,6 +162,8 @@ void PhysX::createTree()
 	NxArray<NxVec3>* vertices = new NxArray<NxVec3>();
 	NxArray<NxU32>*  indices  = new NxArray<NxU32>();
 	mTreeMesh->loadTetFile("tree.tet", vertices, indices);
+	vertices->resize(vertices->size());
+	indices->resize(indices->size());
 
 	meshDesc.numVertices            = vertices->size();
 	meshDesc.numTetrahedra          = indices->size() / 4;
@@ -90,23 +171,20 @@ void PhysX::createTree()
 	meshDesc.tetrahedronStrideBytes = 4 * sizeof(NxU32);
 	meshDesc.vertexMassStrideBytes  = sizeof(NxReal);
 	meshDesc.vertexFlagStrideBytes  = sizeof(NxU32);
-	meshDesc.vertices               = (NxVec3*) malloc(sizeof(NxVec3) * meshDesc.numVertices);
-	meshDesc.tetrahedra             = (NxU32*)  malloc(sizeof(NxU32)  * meshDesc.numTetrahedra * 4);
+	meshDesc.vertices               = vertices->begin();
+	meshDesc.tetrahedra             = indices->begin();
 	meshDesc.vertexMasses           = 0;
 	meshDesc.vertexFlags            = 0;
 	meshDesc.flags                  = 0;
 
-	memcpy((NxVec3*)meshDesc.vertices,  vertices->begin(), vertices->size() * sizeof(NxVec3));
-	memcpy((NxU32*)meshDesc.tetrahedra, indices->begin(),  indices->size()  * sizeof(NxU32));
-
 	assert(meshDesc.isValid());
 
 	assert(mCooking->NxInitCooking(0, 0));
-
 	MemoryWriteBuffer* wb = new MemoryWriteBuffer();
 	assert(mCooking->NxCookSoftBodyMesh(meshDesc, *wb));
 	MemoryReadBuffer* rb = new MemoryReadBuffer(wb->data);
-	NxSoftBodyMesh* treeMesh = mScene->getPhysicsSDK().createSoftBodyMesh(*rb);
+	NxSoftBodyMesh* treeMesh = mPhysicsSDK->createSoftBodyMesh(*rb);
+	mCooking->NxCloseCooking();
 
 	mTreeMesh->buildTetraLinks((NxVec3*) meshDesc.vertices, (NxU32*) meshDesc.tetrahedra,
 							meshDesc.numTetrahedra);
@@ -117,7 +195,10 @@ void PhysX::createTree()
 	softBodyDesc.globalPose.t = NxVec3(-80.0, 0.2, 50.0);
 	mTree = mScene->createSoftBody(softBodyDesc);
 
-	delete vertices, indices, wb, rb;
+	if (treeMesh->getReferenceCount() == 0)
+		mPhysicsSDK->releaseSoftBodyMesh(*treeMesh);
+
+	delete wb, rb;
 }
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32

@@ -11,19 +11,23 @@ class PhysX : public OgreWidget
 {
 public:
 	PhysX();
-	~PhysX();
+	virtual ~PhysX();
 
 protected:
 	void createScene();
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
 	void initPhysX();
+	void stepPhysX(NxReal timeSinceLastFrame);
 	void createTree();
+	void createTerrian();
 
 private:
 	NxPhysicsSDK*       mPhysicsSDK;
 	NxCookingInterface* mCooking;
 	NxScene*            mScene;
+
+	NxActor*            mTerrian;
 	NxSoftBody*         mTree;
 	SoftBodyMesh*       mTreeMesh;
 

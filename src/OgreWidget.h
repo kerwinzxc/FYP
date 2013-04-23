@@ -9,11 +9,16 @@ class OgreWidget : public BaseApplication
 {
 public:
 	OgreWidget();
-	~OgreWidget();
+	virtual ~OgreWidget();
 
 protected:
 	virtual void createScene();
 
+	Ogre::SceneNode    *mSceneNode;
+	Ogre::Entity       *mSceneEntity;
+	ObjLoader          *mSceneLoader;
+
+	Ogre::SceneNode    *mTreeNode;
 	Ogre::Entity       *mTreeEntity;
 	ObjLoader          *mTreeLoader;
 };
