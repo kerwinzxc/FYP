@@ -17,8 +17,11 @@ SoftBodyMesh::SoftBodyMesh(Ogre::MeshPtr mesh, std::vector<std::vector<unsigned 
 
 		Ogre::Real* pReal;
 		size_t offset = vbuf->getVertexSize();
-		posElem->baseVertexPointerToElement(vertex + (*mIndexLinks)[i][1] * offset, &pReal);
-		mBounds.include(NxVec3(pReal[0], pReal[1], pReal[2]));
+		for (size_t j = 0; j < vertexData->vertexCount; ++j, vertex += offset)
+		{
+			posElem->baseVertexPointerToElement(vertex, &pReal);
+			mBounds.include(NxVec3(pReal[0], pReal[1], pReal[2]));
+		}
 		vbuf->unlock();
 	}
 }
