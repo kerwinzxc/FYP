@@ -25,6 +25,7 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\ObjMeshExt.cpp" />
     <ClCompile Include="..\src\OgreApp.cpp" />
+    <ClCompile Include="..\src\PhysXSoftBody.cpp" />
     <ClCompile Include="..\src\PhysXSystem.cpp" />
     <ClCompile Include="..\src\PhysXTriangleMesh.cpp" />
   </ItemGroup>
@@ -39,6 +40,7 @@
     <ClInclude Include="..\src\Common.h" />
     <ClInclude Include="..\src\ObjMeshExt.h" />
     <ClInclude Include="..\src\OgreApp.h" />
+    <ClInclude Include="..\src\PhysXSoftBody.h" />
     <ClInclude Include="..\src\PhysXSystem.h" />
     <ClInclude Include="..\src\PhysXTriangleMesh.h" />
   </ItemGroup>

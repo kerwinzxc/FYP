@@ -3,6 +3,7 @@
 
 #include "PhysXSystem.h"
 #include "PhysXTriangleMesh.h"
+#include "PhysXSoftBody.h"
 
 using namespace Ogre;
 
@@ -21,9 +22,11 @@ private:
 	String getFilePath(const String& filename);
 
 	void createTerrian();
+	void createTree();
 
 	PhysXSystem*       mPhysXSys;
 	PhysXTriangleMesh* mTerrian;
+	PhysXSoftBody*     mTree;
 };
 
 #endif
