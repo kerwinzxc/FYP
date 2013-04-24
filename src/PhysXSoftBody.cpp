@@ -91,6 +91,7 @@ bool PhysXSoftBody::loadTetFile(NxArray<NxVec3>* vertices, NxArray<NxU32>* tetra
 			tetrahedras->push_back(atoi(tetrahedra[1].c_str()));
 			tetrahedras->push_back(atoi(tetrahedra[2].c_str()));
 			tetrahedras->push_back(atoi(tetrahedra[3].c_str()));
+			tetrahedra.swap(Ogre::StringVector());
 		}
 	}
 
