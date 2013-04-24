@@ -14,8 +14,8 @@ public:
 	void render();
 
 private:
-	bool saveMeshDesc(NxSoftBodyMeshDesc &desc, char* path);
-	bool loadTetFile(char* path, NxArray<NxVec3>* vertices, NxArray<NxU32>* tetrahedras);
+	bool saveMeshDesc(NxSoftBodyMeshDesc &desc);
+	bool loadTetFile(NxArray<NxVec3>* vertices, NxArray<NxU32>* tetrahedras);
 	void init(NxSoftBodyDesc &desc, NxSoftBodyMeshDesc &meshDesc);
 	bool cookMesh(NxSoftBodyMeshDesc& desc);
 	void releaseMeshDescBuffers(const NxSoftBodyMeshDesc& desc);

@@ -9,7 +9,7 @@ PhysXSoftBody::PhysXSoftBody(NxScene *scene, Ogre::SceneManager* sceneMgr, NxSof
 	mObjMesh->loadFromObjFile(objFilePath);
 
 	NxSoftBodyMeshDesc meshDesc;
-	saveMeshDesc(meshDesc, objFilePath);
+	saveMeshDesc(meshDesc);
 	init(desc, meshDesc);
 	initEntity();
 }
@@ -28,12 +28,12 @@ PhysXSoftBody::~PhysXSoftBody()
 		delete mObjMesh;
 }
 
-bool PhysXSoftBody::saveMeshDesc(NxSoftBodyMeshDesc &desc, char* path)
+bool PhysXSoftBody::saveMeshDesc(NxSoftBodyMeshDesc &desc)
 {
 	NxArray<NxVec3>* vertices    = new NxArray<NxVec3>(mObjMesh->getNumVertices());
 	NxArray<NxU32>*  tetrahedras = new NxArray<NxU32>(mObjMesh->getNumTriangles());
 
-	loadTetFile(path, vertices, tetrahedras);
+	loadTetFile(vertices, tetrahedras);
 
 	NxU32 vertexCount = vertices->size();
 	NxU32 tetCount    = tetrahedras->size() / 4;
@@ -59,7 +59,7 @@ bool PhysXSoftBody::saveMeshDesc(NxSoftBodyMeshDesc &desc, char* path)
 	return true;
 }
 
-bool PhysXSoftBody::loadTetFile(char* path, NxArray<NxVec3>* vertices, NxArray<NxU32>* tetrahedras)
+bool PhysXSoftBody::loadTetFile(NxArray<NxVec3>* vertices, NxArray<NxU32>* tetrahedras)
 {
 	if (!mObjMesh)
 		return false;
@@ -67,11 +67,12 @@ bool PhysXSoftBody::loadTetFile(char* path, NxArray<NxVec3>* vertices, NxArray<N
 	vertices->clear();
 	tetrahedras->clear();
 
-	std::string tetpath;
-	tetpath.append(path, strlen(path) - 4);
-	tetpath.append(".tet");
+	std::string filepath;
+	filepath.append(mObjMesh->getPath());
+	filepath.append(mObjMesh->getName());
+	filepath.append(".tet");
 
-	std::ifstream f(tetpath);
+	std::ifstream f(filepath);
 	std::string line;
 
 	NxVec3 vertex;

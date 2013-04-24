@@ -13,6 +13,7 @@ public:
 	bool loadFromObjFile(char *filename);
 
 	int getNumMaterials() const { return (int)mMaterials.size(); }
+	const char* getPath() const { return mPath; }
 
 	const NxVec3& getNormal(int i) const { return mNormals[i]; }
 	const TexCoord& getTexCoord(int i) const { return mTexCoords[i]; }
