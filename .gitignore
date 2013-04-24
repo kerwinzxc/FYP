@@ -9,5 +9,7 @@ ipch/
 *.sdf
 *.suo
 *.user
+# Specific Files
+memory_failure_log.txt
 ogre.cfg
 Ogre.log
