@@ -21,7 +21,7 @@ void ObjMeshExt::extractPath(char *filename)
 
 void ObjMeshExt::parseRef(char *s, int nr[])
 {
-	int i,j,k;
+	int i, k;
 	for (k = 0; k < 3; k++)
 		nr[k] = -1;
 
@@ -29,7 +29,7 @@ void ObjMeshExt::parseRef(char *s, int nr[])
 	char is[256]; i = 0;
 
 	for (k = 0; k < 3; k++) {
-		j = 0;
+		int j = 0;
 		while (i < len && s[i] != '/') {
 			is[j] = s[i]; i++; j++;
 		}
@@ -47,7 +47,7 @@ bool ObjMeshExt::loadFromObjFile(char *filename)
 	if (!f) return false;
 	clear();
 	ObjMeshString s, subs[maxVerticesPerFace];
-	ObjMeshString mtllib, matName;
+	ObjMeshString mtllib; //matName;
 
 	mHasTextureCoords = false;
 	mHasNormals = false;
@@ -69,13 +69,13 @@ bool ObjMeshExt::loadFromObjFile(char *filename)
 		if (fgets(s, OBJ_MESH_STRING_LEN, f) == NULL) break;
 
 		if (strncmp(s, "mtllib", 6) == 0) {  // material library
-			sscanf(&s[7], "%s", mtllib);
+			sscanf(&s[7], "%255s", mtllib);
 			// importMtlFile(mtllib);
 		}
 		else if (strncmp(s, "usemtl", 6) == 0) {  // use material
 			materialNr++;
 			ObjMeshMaterial material;
-			sscanf(&s[7], "%s", material.name);
+			sscanf(&s[7], "%255s", material.name);
 			material.texNr = materialNr;
 			mMaterials.push_back(material);
 			// sscanf(&s[7], "%s", matName);
@@ -101,7 +101,7 @@ bool ObjMeshExt::loadFromObjFile(char *filename)
 		}
 		else if (strncmp(s, "f ", 2) == 0) {	// face
 			int nr;
-			nr = sscanf(s, "f %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
+			nr = sscanf(s, "f %7s %7s %7s %7s %7s %7s %7s %7s %7s %7s %7s %7s %7s %7s %7s",
 			subs[0], subs[1], subs[2], subs[3], subs[4],
 			subs[5], subs[6], subs[7], subs[8], subs[9],
 			subs[10], subs[11], subs[12],subs[13], subs[14]);
