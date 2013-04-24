@@ -6,17 +6,6 @@ void ObjMeshExt::extractPath(char *filename)
 	Ogre::StringUtil::splitFullFilename(filename, base, ext, path);
 	strncpy(mPath, path.c_str(), sizeof(mPath));
 	strncpy(mName, base.c_str(), sizeof(mName));
-	// strcpy(mPath, filename);
-	// int i = (int) strlen(mPath)-1;
-	// while (i >= 0 && mPath[i] != '\\' && mPath[i] != ':') i--;
-	// if (i >= 0) mPath[i] = '\0';
-	// else strcpy(mPath, ".");
-
-	// int j = 0;
-	// i++;
-	// while (i < (int)strlen(filename))
-	// 	mName[j++] = filename[i++];
-	// mName[j] = '\0';
 }
 
 void ObjMeshExt::parseRef(char *s, int nr[])
@@ -47,7 +36,7 @@ bool ObjMeshExt::loadFromObjFile(char *filename)
 	if (!f) return false;
 	clear();
 	ObjMeshString s, subs[maxVerticesPerFace];
-	ObjMeshString mtllib; //matName;
+	ObjMeshString mtllib;
 
 	mHasTextureCoords = false;
 	mHasNormals = false;
@@ -69,23 +58,15 @@ bool ObjMeshExt::loadFromObjFile(char *filename)
 		if (fgets(s, OBJ_MESH_STRING_LEN, f) == NULL) break;
 
 		if (strncmp(s, "mtllib", 6) == 0) {  // material library
-			sscanf(&s[7], "%255s", mtllib);
+			sscanf(&s[7], "%s", mtllib);
 			// importMtlFile(mtllib);
 		}
 		else if (strncmp(s, "usemtl", 6) == 0) {  // use material
 			materialNr++;
 			ObjMeshMaterial material;
-			sscanf(&s[7], "%255s", material.name);
+			sscanf(&s[7], "%s", material.name);
 			material.texNr = materialNr;
 			mMaterials.push_back(material);
-			// sscanf(&s[7], "%s", matName);
-			// materialNr = 0;
-			// int numMaterials = (int)mMaterials.size();
-			// while (materialNr < numMaterials &&
-			// 	   strcasecmp(mMaterials[materialNr].name, matName) != 0)
-			// 	materialNr++;
-			// if (materialNr >= numMaterials)
-			// 	materialNr = -1;
 		}
 		else if (strncmp(s, "v ", 2) == 0) {	// vertex
 			sscanf(s, "v %f %f %f", &v.x, &v.y, &v.z);
@@ -101,7 +82,7 @@ bool ObjMeshExt::loadFromObjFile(char *filename)
 		}
 		else if (strncmp(s, "f ", 2) == 0) {	// face
 			int nr;
-			nr = sscanf(s, "f %7s %7s %7s %7s %7s %7s %7s %7s %7s %7s %7s %7s %7s %7s %7s",
+			nr = sscanf(s, "f %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
 			subs[0], subs[1], subs[2], subs[3], subs[4],
 			subs[5], subs[6], subs[7], subs[8], subs[9],
 			subs[10], subs[11], subs[12],subs[13], subs[14]);
