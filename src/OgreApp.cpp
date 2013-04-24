@@ -4,6 +4,7 @@ OgreApp::OgreApp()
 	: mTerrian(NULL), mTree(NULL)
 {
 	mPhysXSys = new PhysXSystem();
+	// mPhysXSys->setGPUuse(false);
 }
 
 OgreApp::~OgreApp()
@@ -27,7 +28,7 @@ bool OgreApp::configure()
 void OgreApp::createScene()
 {
 	createTerrian();
-	// createTree();
+	createTree();
 }
 
 bool OgreApp::frameStarted(const FrameEvent& evt)

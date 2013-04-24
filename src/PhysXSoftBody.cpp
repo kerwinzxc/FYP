@@ -36,7 +36,8 @@ bool PhysXSoftBody::saveMeshDesc(NxSoftBodyMeshDesc &desc)
 	loadTetFile(vertices, tetrahedras);
 
 	NxU32 vertexCount = vertices->size();
-	NxU32 tetCount    = tetrahedras->size() / 4;
+	NxU32 indexCount  = tetrahedras->size();
+	NxU32 tetCount    = indexCount / 4;
 
 	desc.numVertices            = vertexCount;
 	desc.numTetrahedra          = tetCount;
@@ -45,13 +46,19 @@ bool PhysXSoftBody::saveMeshDesc(NxSoftBodyMeshDesc &desc)
 	desc.vertexMassStrideBytes  = sizeof(NxReal);
 	desc.vertexFlagStrideBytes  = sizeof(NxU32);
 	desc.vertices               = (NxVec3*)malloc(sizeof(NxVec3) * vertexCount);
-	desc.tetrahedra             = (NxU32*) malloc(sizeof(NxU32)  * tetCount * 4);
+	desc.tetrahedra             = (NxU32*) malloc(sizeof(NxU32)  * indexCount);
 	desc.vertexMasses           = 0;
 	desc.vertexFlags            = 0;
 	desc.flags                  = 0;
 
-	memcpy((NxVec3*)desc.vertices,   vertices->begin(),    sizeof(NxU32) * vertexCount);
-	memcpy((NxU32*) desc.tetrahedra, tetrahedras->begin(), sizeof(NxU32) * tetCount * 4);
+	NxVec3* vSrc  = (NxVec3*)vertices->begin();
+	NxVec3* vDest = (NxVec3*)desc.vertices;
+	for (NxU32 i = 0; i < vertexCount; i++, ++vSrc, ++vDest)
+		*vDest = (*vSrc);
+	NxU32* tSrc  = (NxU32*)tetrahedras->begin();
+	NxU32* tDest = (NxU32*)desc.tetrahedra;
+	for (NxU32 i = 0; i < indexCount; i++, ++tSrc, ++tDest)
+		*tDest = (*tSrc);
 
 	delete vertices;
 	delete tetrahedras;
