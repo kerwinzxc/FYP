@@ -41,7 +41,7 @@ bool PhysXSoftBody::saveMeshDesc(NxSoftBodyMeshDesc &desc)
 	desc.numVertices            = vertexCount;
 	desc.numTetrahedra          = tetCount;
 	desc.vertexStrideBytes      = sizeof(NxVec3);
-	desc.tetrahedronStrideBytes = 3 * sizeof(NxU32);
+	desc.tetrahedronStrideBytes = 4 * sizeof(NxU32);
 	desc.vertexMassStrideBytes  = sizeof(NxReal);
 	desc.vertexFlagStrideBytes  = sizeof(NxU32);
 	desc.vertices               = (NxVec3*)malloc(sizeof(NxVec3) * vertexCount);
