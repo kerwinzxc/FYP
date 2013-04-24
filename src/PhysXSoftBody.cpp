@@ -75,22 +75,21 @@ bool PhysXSoftBody::loadTetFile(char* path, NxArray<NxVec3>* vertices, NxArray<N
 	std::string line;
 
 	NxVec3 vertex;
-	Ogre::Vector4 tetrahedra;
+	Ogre::StringVector tetrahedra;
 	while (std::getline(f, line))
 	{
 		if (line.compare(0, 2, "v ") == 0)
 		{
-			sscanf(line.substr(2).c_str(), "%f %f %f", &vertex.x, &vertex.y, &vertex.z);
+			sscanf(line.c_str(), "v %f %f %f", &vertex.x, &vertex.y, &vertex.z);
 			vertices->push_back(vertex);
 		}
 		else if (line.compare(0, 2, "t ") == 0)
 		{
-			sscanf(line.substr(2).c_str(), "%d %d %d %d", &tetrahedra.w, &tetrahedra.x,
-			                                              &tetrahedra.y, &tetrahedra.z);
-			tetrahedras->push_back(tetrahedra.w);
-			tetrahedras->push_back(tetrahedra.x);
-			tetrahedras->push_back(tetrahedra.y);
-			tetrahedras->push_back(tetrahedra.z);
+			tetrahedra = Ogre::StringConverter::parseStringVector(line.substr(2));
+			tetrahedras->push_back(atoi(tetrahedra[0].c_str()));
+			tetrahedras->push_back(atoi(tetrahedra[1].c_str()));
+			tetrahedras->push_back(atoi(tetrahedra[2].c_str()));
+			tetrahedras->push_back(atoi(tetrahedra[3].c_str()));
 		}
 	}
 
