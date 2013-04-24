@@ -13,8 +13,10 @@ public:
 	void stepPhysX(NxReal elapsedTime);
 	void shutdownPhysX();
 
-	NxPhysicsSDK* getPhysicsSDK() {return mPhysicsSDK;}
-	NxScene*	  getScene()      {return mScene;}
+	NxPhysicsSDK* getPhysicsSDK()        { return mPhysicsSDK; }
+	NxScene*      getScene()             { return mScene; }
+	bool          getGPUuse()            { return mUseGPU; }
+	void          setGPUuse(bool useGPU) { mUseGPU = useGPU; }
 
 private:
 	NxPhysicsSDK* mPhysicsSDK;
