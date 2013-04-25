@@ -2,8 +2,10 @@
 #define OGRE_APP_H
 
 #include "PhysXSystem.h"
-#include "PhysXTriangleMesh.h"
+
+#include "PhysXCapsule.h"
 #include "PhysXSoftBody.h"
+#include "PhysXTriangleMesh.h"
 
 using namespace Ogre;
 
@@ -23,10 +25,13 @@ private:
 
 	void createTerrian();
 	void createTree();
+	void createTreeBody();
 
 	PhysXSystem*       mPhysXSys;
 	PhysXTriangleMesh* mTerrian;
 	PhysXSoftBody*     mTree;
+
+	std::vector<PhysXCapsule*> mTreeBody;
 };
 
 #endif
