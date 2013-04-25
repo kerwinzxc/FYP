@@ -27,6 +27,7 @@ PhysXSoftBody::~PhysXSoftBody()
 	}
 	if (mObjMesh)
 		delete mObjMesh;
+	mVertexOffsets.swap(std::vector<int>());
 }
 
 bool PhysXSoftBody::saveMeshDesc(NxSoftBodyMeshDesc &desc)
