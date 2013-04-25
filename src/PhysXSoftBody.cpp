@@ -3,7 +3,7 @@
 PhysXSoftBody::PhysXSoftBody(NxScene *scene, Ogre::SceneManager* sceneMgr, NxSoftBodyDesc &desc,
                              char* objFilePath)
 	: mInitDone(false), mScene(scene), mSoftBodyMesh(NULL), mSoftBody(NULL),
-	  mSceneMgr(sceneMgr), mEntity(NULL)
+	  mSceneMgr(sceneMgr), mSoftBodyNode(NULL), mEntity(NULL)
 {
 	mObjMesh = new ObjMeshExt();
 	mObjMesh->loadFromObjFile(objFilePath);
