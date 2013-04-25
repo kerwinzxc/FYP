@@ -1,7 +1,6 @@
 #include "OgreApp.h"
 
-OgreApp::OgreApp()
-	: mTerrian(NULL), mTree(NULL), mTreeBody(0)
+OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL)
 {
 	mPhysXSys = new PhysXSystem();
 	// mPhysXSys->setGPUuse(false);
@@ -16,6 +15,8 @@ OgreApp::~OgreApp()
 	if (mTreeBody.size() > 0)
 		for (std::vector<PhysXCapsule*>::iterator i = mTreeBody.begin(); i != mTreeBody.end(); ++i)
 			delete *i;
+	if (mFluid)
+		delete mFluid;
 	delete mPhysXSys;
 }
 
@@ -37,6 +38,7 @@ void OgreApp::createScene()
 	createTerrian();
 	createTree();
 	createTreeBody();
+	createFluid();
 }
 
 bool OgreApp::frameStarted(const FrameEvent& evt)
@@ -47,6 +49,8 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 		mPhysXSys->stepPhysX(evt.timeSinceLastFrame);
 	if (mTree)
 		mTree->render();
+	if (mFluid)
+		mFluid->render();
 	return true;
 }
 
@@ -131,4 +135,35 @@ void OgreApp::createTreeBody()
 
 	if (mTree)
 		mTree->getNxSoftBody()->attachToCollidingShapes(0);
+}
+
+void OgreApp::createFluid()
+{
+	NxFluidDesc fluidDesc;
+	fluidDesc.maxParticles                    = 15000;
+	fluidDesc.kernelRadiusMultiplier          = 2.0f;
+	fluidDesc.restParticlesPerMeter           = 1.5f;
+	fluidDesc.motionLimitMultiplier           = 3.0f;
+	fluidDesc.packetSizeMultiplier            = 8;
+	fluidDesc.collisionDistanceMultiplier     = 0.1f;
+	fluidDesc.stiffness                       = 50.0f;
+	fluidDesc.viscosity                       = 10.0f;
+	fluidDesc.restDensity                     = 200.0f;
+	fluidDesc.damping                         = 0.0f;
+	fluidDesc.restitutionForStaticShapes      = 0.0f;
+	fluidDesc.restitutionForDynamicShapes     = 0.0f;
+	fluidDesc.dynamicFrictionForStaticShapes  = 0.08f;
+	fluidDesc.dynamicFrictionForDynamicShapes = 0.08f;
+	fluidDesc.staticFrictionForStaticShapes   = 0.0f;
+	fluidDesc.staticFrictionForDynamicShapes  = 0.0f;
+	fluidDesc.numReserveParticles             = 500;
+	fluidDesc.simulationMethod                = NX_F_SPH;
+
+	fluidDesc.flags |= NX_FF_PRIORITY_MODE ;
+	if (mPhysXSys->getGPUuse())
+		fluidDesc.flags |= NX_FF_HARDWARE;
+	else
+		fluidDesc.flags &= ~NX_FF_HARDWARE;
+
+	mFluid = new PhysXFluid(mPhysXSys->getScene(), mSceneMgr, fluidDesc);
 }
