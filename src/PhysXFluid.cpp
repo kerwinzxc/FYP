@@ -178,8 +178,8 @@ void PhysXFluid::initParticleSystem(NxFluidDesc &desc)
 	mParticleSystem = mSceneMgr->createParticleSystem(desc.maxParticles * 2);
 	mFluidNode->attachObject(mParticleSystem);
 
-	mParticleSystem->setDefaultDimensions(0.2f, 0.2f);
-	mParticleSystem->setMaterialName("Examples/Water4");
+	mParticleSystem->setDefaultDimensions(1.0f, 1.0f);
+	mParticleSystem->setMaterialName("Examples/Water2");
 	mParticleSystem->setParticleQuota(desc.maxParticles);
 	mParticleSystem->setSpeedFactor(0.0f);
 }
