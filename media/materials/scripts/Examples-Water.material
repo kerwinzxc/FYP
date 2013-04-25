@@ -1,0 +1,73 @@
+
+material Examples/Water0
+{
+	technique
+	{
+		pass
+		{
+			scene_blend colour_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture Water01.jpg
+				env_map spherical
+				scroll_anim 0.01 0.01
+			}
+		}
+	}
+}
+material Examples/Water2
+{
+	technique
+	{
+		pass
+		{
+			scene_blend colour_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture Water01.jpg
+				scroll_anim 0.01 0.01
+			}
+		}
+	}
+}
+material Examples/Water3
+{
+	technique
+	{
+		pass
+		{
+			scene_blend colour_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture Water02.jpg
+				env_map spherical
+				scroll_anim 0.01 0.01
+				rotate_anim 0.03
+			}
+		}
+	}
+}
+material Examples/Water4
+{
+	technique
+	{
+		pass
+		{
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture Water02.jpg
+				env_map spherical
+				scroll_anim 0.01 0.01
+			}
+		}
+	}
+}
