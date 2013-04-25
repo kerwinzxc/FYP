@@ -33,11 +33,11 @@ PhysXFluid::~PhysXFluid()
 void PhysXFluid::init(NxFluidDesc &desc)
 {
 	initFluid(desc);
+	allocateReceiveBuffers(desc);
 	mFluid = mScene->createFluid(desc);
 	initFrameActor();
 	initFluidEmitter();
 	initFluidDrain();
-	allocateReceiveBuffers(desc);
 	mInitDone = true;
 }
 
@@ -47,14 +47,9 @@ NxVec3 PhysXFluid::RandNormalVec()
 	NxReal s = 0;
 
 	//choose direction, uniformly distributed.
-	do
-	{
-		s++;
-		x =  5.0f + NxMath::rand(-17.0f, 17.0f);
-		y = 20.0f + NxMath::rand(  0.0f, 15.0f);
-		z = 15.0f + NxMath::rand( -4.0f, 10.0f);
-
-	} while (s < mInitParticles);
+	x =  5.0f + NxMath::rand(-17.0f, 17.0f);
+	y = 20.0f + NxMath::rand(  0.0f, 15.0f);
+	z = 15.0f + NxMath::rand( -4.0f, 10.0f);
 
 	return NxVec3(x, y, z);
 }
@@ -149,7 +144,7 @@ bool PhysXFluid::initFluidDrain()
 	NxActorDesc drainActorDesc;
 
 	drainDesc.setToDefault();
-	drainDesc.shapeFlags |=NX_SF_FLUID_DRAIN;
+	drainDesc.shapeFlags |= NX_SF_FLUID_DRAIN;
 	drainDesc.dimensions.set(20.0f, 3.0f, 0.01f);
 	drainActorDesc.shapes.pushBack(&drainDesc);
 
