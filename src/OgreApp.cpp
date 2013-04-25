@@ -4,6 +4,7 @@ OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL)
 {
 	mPhysXSys = new PhysXSystem();
 	// mPhysXSys->setGPUuse(false);
+	mPhysXSys->initPhysX();
 }
 
 OgreApp::~OgreApp()

@@ -6,7 +6,6 @@ PhysXSystem::PhysXSystem()
 	  mCookingInitialized(false),
 	  mUseGPU(true)
 {
-	initPhysX();
 }
 
 PhysXSystem::~PhysXSystem()
