@@ -23,7 +23,8 @@ private:
 	void releaseReceiveBuffers();
 	void initEntity();
 
-	bool            mInitDone;
+	bool             mInitDone;
+	std::vector<int> mVertexOffsets;
 
 	ObjMeshExt*     mObjMesh;
 

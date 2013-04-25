@@ -7,6 +7,7 @@ PhysXSoftBody::PhysXSoftBody(NxScene *scene, Ogre::SceneManager* sceneMgr, NxSof
 {
 	mObjMesh = new ObjMeshExt();
 	mObjMesh->loadFromObjFile(objFilePath);
+	mVertexOffsets.resize(mObjMesh->getNumMaterials()); mVertexOffsets.clear();
 
 	NxSoftBodyMeshDesc meshDesc;
 	saveMeshDesc(meshDesc);
@@ -198,9 +199,7 @@ void PhysXSoftBody::initEntity()
 
 	assert(vertexCount >= 3);
 
-	std::vector<int> vertexOffsets;
 	std::vector<int> triOffsets;
-	vertexOffsets.resize(mObjMesh->getNumMaterials()); vertexOffsets.clear();
 	triOffsets.resize(mObjMesh->getNumMaterials());    triOffsets.clear();
 
 	int prevMat = mObjMesh->getTriangle(0).materialNr;
@@ -216,24 +215,24 @@ void PhysXSoftBody::initEntity()
 		else
 		{
 			prevMat = tri.materialNr;
-			vertexOffsets.push_back(max);
+			mVertexOffsets.push_back(max);
 			triOffsets.push_back(j - 1);
 			max = *std::max_element(tri.vertexNr, tri.vertexNr + 3);
 		}
 	}
-	vertexOffsets.push_back(max);
+	mVertexOffsets.push_back(max);
 	triOffsets.push_back(triangleCount - 1);
 
 	int j = 0, k = 0, offset = 0;
-	for (size_t i = 0; i < vertexOffsets.size(); ++i)
+	for (size_t i = 0; i < mVertexOffsets.size(); ++i)
 	{
-		manualObject->estimateVertexCount(vertexOffsets[i] - j + 1);
+		manualObject->estimateVertexCount(mVertexOffsets[i] - j + 1);
 		manualObject->estimateIndexCount((triOffsets[i] - k + 1) * 3);
 
 		ObjMeshMaterial material = mObjMesh->getMaterial(i);
 		manualObject->begin(material.name, Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
-		for (; j <= vertexOffsets[i]; j++)
+		for (; j <= mVertexOffsets[i]; j++)
 		{
 			NxVec3 vertex = mObjMesh->getVertex(j);
 			manualObject->position(vertex.x, vertex.y, vertex.z);
@@ -247,7 +246,7 @@ void PhysXSoftBody::initEntity()
 			ObjMeshTriangle tri = mObjMesh->getTriangle(k);
 			manualObject->triangle(tri.vertexNr[0] - offset, tri.vertexNr[1] - offset, tri.vertexNr[2] - offset);
 		}
-		offset = vertexOffsets[i] + 1;
+		offset = mVertexOffsets[i] + 1;
 
 		manualObject->end();
 	}
@@ -263,30 +262,8 @@ void PhysXSoftBody::render()
 {
 	mObjMesh->simulateMesh(mReceiveBuffers);
 
-	std::vector<int> vertexOffsets;
-	vertexOffsets.resize(mObjMesh->getNumMaterials()); vertexOffsets.clear();
-
-	int prevMat = mObjMesh->getTriangle(0).materialNr;
-	int max = -1;
-	for (int j = 0; j < mObjMesh->getNumTriangles(); j++)
-	{
-		ObjMeshTriangle tri = mObjMesh->getTriangle(j);
-		if (prevMat == tri.materialNr)
-		{
-			if (*std::max_element(tri.vertexNr, tri.vertexNr + 3) > max)
-				max = *std::max_element(tri.vertexNr, tri.vertexNr + 3);
-		}
-		else
-		{
-			prevMat = tri.materialNr;
-			vertexOffsets.push_back(max);
-			max = *std::max_element(tri.vertexNr, tri.vertexNr + 3);
-		}
-	}
-	vertexOffsets.push_back(max);
-
 	int j = 0;
-	for (size_t i = 0; i < vertexOffsets.size(); ++i)
+	for (size_t i = 0; i < mVertexOffsets.size(); ++i)
 	{
 		Ogre::SubMesh* submesh = mEntity->getMesh()->getSubMesh(i);
 		Ogre::VertexData* vertexData = submesh->vertexData;
@@ -296,7 +273,7 @@ void PhysXSoftBody::render()
 		size_t offset = vbuf->getVertexSize();
 		Ogre::Real* pReal;
 
-		for (; j <= vertexOffsets[i]; j++, ver += offset)
+		for (; j <= mVertexOffsets[i]; j++, ver += offset)
 		{
 			NxVec3 vertex = mObjMesh->getVertex(j);
 
