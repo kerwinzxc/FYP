@@ -33,7 +33,6 @@ PhysXFluid::~PhysXFluid()
 
 	free(mPositions);
 	free(mVelocities);
-	free(mCollisonNormals);
 }
 
 void PhysXFluid::init(NxFluidDesc &desc)
