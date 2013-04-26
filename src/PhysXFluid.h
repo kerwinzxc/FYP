@@ -49,7 +49,6 @@ private:
 
 	NxVec3* mPositions;
 	NxVec3* mVelocities;
-	NxVec3* mCollisonNormals;
 	NxU32   mNumOfParticles;
 };
 
