@@ -4,6 +4,7 @@
 #include "PhysXSystem.h"
 
 #include "PhysXCapsule.h"
+#include "PhysXClothes.h"
 #include "PhysXFluid.h"
 #include "PhysXSoftBody.h"
 #include "PhysXTriangleMesh.h"
@@ -27,11 +28,13 @@ private:
 	void createTerrian();
 	void createTree();
 	void createTreeBody();
+	void createLeaves();
 	void createFluid();
 
 	PhysXSystem*       mPhysXSys;
 	PhysXTriangleMesh* mTerrian;
 	PhysXSoftBody*     mTree;
+	PhysXClothes*      mLeaves;
 	PhysXFluid*        mFluid;
 
 	std::vector<PhysXCapsule*> mTreeBody;

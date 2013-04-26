@@ -16,6 +16,8 @@ OgreApp::~OgreApp()
 	if (mTreeBody.size() > 0)
 		for (std::vector<PhysXCapsule*>::iterator i = mTreeBody.begin(); i != mTreeBody.end(); ++i)
 			delete *i;
+	if (mLeaves)
+		delete mLeaves;
 	if (mFluid)
 		delete mFluid;
 	delete mPhysXSys;
@@ -39,6 +41,7 @@ void OgreApp::createScene()
 	createTerrian();
 	createTree();
 	createTreeBody();
+	// createLeaves();
 	createFluid();
 }
 
@@ -50,6 +53,8 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 		mPhysXSys->stepPhysX(evt.timeSinceLastFrame);
 	if (mTree)
 		mTree->render();
+	if (mLeaves)
+		mLeaves->render();
 	if (mFluid)
 		mFluid->render();
 	return true;
@@ -136,6 +141,33 @@ void OgreApp::createTreeBody()
 
 	if (mTree)
 		mTree->getNxSoftBody()->attachToCollidingShapes(0);
+}
+
+void OgreApp::createLeaves()
+{
+	NxClothDesc desc;
+	desc.thickness           = 0.5f;
+	desc.bendingStiffness    = 1.0;
+	desc.stretchingStiffness = 1.0;
+	desc.dampingCoefficient  = 0.9f;
+	desc.solverIterations    = 5;
+	desc.friction            = 0.01;
+	desc.density             = 1000.0;
+
+	desc.flags	 =	NX_CLF_GRAVITY;
+	desc.flags	|=	NX_CLF_DAMPING;
+	desc.flags  |=	NX_CLF_COMDAMPING;
+	desc.flags	|=	NX_CLF_COLLISION_TWOWAY;
+	desc.flags	|=	NX_CLF_VISUALIZATION;
+	if (mPhysXSys->getGPUuse())
+		desc.flags	|=	NX_CLF_HARDWARE;
+	else
+		desc.flags	&=	~NX_CLF_HARDWARE;
+
+	char* filepath = strdup(getFilePath("leaf.obj").c_str());
+	mLeaves = new PhysXClothes(mPhysXSys->getScene(), mSceneMgr, desc, filepath,
+	                           NxVec3(-90.0, 20.0, 30.0), 50);
+	free(filepath);
 }
 
 void OgreApp::createFluid()
