@@ -4,7 +4,7 @@
 #include "PhysXSystem.h"
 
 #include "PhysXCapsule.h"
-#include "PhysXClothes.h"
+// #include "PhysXClothes.h"
 #include "PhysXFluid.h"
 #include "PhysXSoftBody.h"
 #include "PhysXTriangleMesh.h"
@@ -34,7 +34,7 @@ private:
 	PhysXSystem*       mPhysXSys;
 	PhysXTriangleMesh* mTerrian;
 	PhysXSoftBody*     mTree;
-	PhysXClothes*      mLeaves;
+	// PhysXClothes*      mLeaves;
 	PhysXFluid*        mFluid;
 
 	std::vector<PhysXCapsule*> mTreeBody;
