@@ -95,6 +95,8 @@ void PhysXCloth::init(NxClothDesc &desc, NxClothMeshDesc &meshDesc)
 	assert(desc.isValid());
 	mCloth = mScene->createCloth(desc);
 	mCloth->wakeUp();
+
+	mInitDone = true;
 }
 
 void PhysXCloth::allocateReceiveBuffers(NxU32 numVertices, NxU32 numTriangles)
@@ -158,7 +160,7 @@ void PhysXCloth::initOgreScene()
 void PhysXCloth::render()
 {
 	mManualObj->clear();
-	mManualObj->begin("", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+	mManualObj->begin("Vegetation_Blur7", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 	for (NxU32 i = 0; i < mNumVertices; i++)
 	{
