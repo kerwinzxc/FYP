@@ -41,17 +41,13 @@ bool PhysXSoftBody::saveMeshDesc(NxSoftBodyMeshDesc &desc)
 	NxU32 indexCount  = tetrahedras->size();
 	NxU32 tetCount    = indexCount / 4;
 
+	desc.setToDefault();
 	desc.numVertices            = vertexCount;
 	desc.numTetrahedra          = tetCount;
 	desc.vertexStrideBytes      = sizeof(NxVec3);
 	desc.tetrahedronStrideBytes = 4 * sizeof(NxU32);
-	desc.vertexMassStrideBytes  = sizeof(NxReal);
-	desc.vertexFlagStrideBytes  = sizeof(NxU32);
 	desc.vertices               = (NxVec3*)malloc(sizeof(NxVec3) * vertexCount);
 	desc.tetrahedra             = (NxU32*) malloc(sizeof(NxU32)  * indexCount);
-	desc.vertexMasses           = 0;
-	desc.vertexFlags            = 0;
-	desc.flags                  = 0;
 
 	NxVec3* vSrc  = (NxVec3*)vertices->begin();
 	NxVec3* vDest = (NxVec3*)desc.vertices;
@@ -145,12 +141,8 @@ void PhysXSoftBody::releaseMeshDescBuffers(const NxSoftBodyMeshDesc& desc)
 {
 	NxVec3* y = (NxVec3*)desc.vertices;
 	NxU32*  t = (NxU32*) desc.tetrahedra;
-	NxReal* m = (NxReal*)desc.vertexMasses;
-	NxU32*  z = (NxU32*) desc.vertexFlags;
 	free(y);
 	free(t);
-	free(m);
-	free(z);
 }
 
 void PhysXSoftBody::allocateReceiveBuffers(NxU32 numVertices, NxU32 numTetrahedra)

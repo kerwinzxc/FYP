@@ -15,6 +15,7 @@ PhysXCapsule::~PhysXCapsule()
 void PhysXCapsule::createCapsule(const CapsuleInfo& info)
 {
 	NxCapsuleShapeDesc capsuleDesc;
+	capsuleDesc.setToDefault();
 	capsuleDesc.height = info.mHeight;
 	capsuleDesc.radius = info.mRadius;
 
@@ -26,7 +27,7 @@ void PhysXCapsule::createCapsule(const CapsuleInfo& info)
 	capsuleDesc.localPose.M = rot0;
 
 	NxActorDesc actorDesc;
-
+	actorDesc.setToDefault();
 	actorDesc.shapes.pushBack(&capsuleDesc);
 	actorDesc.density = 1.0;
 	actorDesc.globalPose.t = info.mGlobalPose;

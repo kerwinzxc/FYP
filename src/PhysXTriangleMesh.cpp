@@ -110,6 +110,7 @@ bool PhysXTriangleMesh::saveMeshDesc(NxTriangleMeshDesc &desc, char* filepath)
 	mTriangleNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
 	mTriangleNode->attachObject(mManualObj);
 
+	desc.setToDefault();
 	desc.numVertices               = vertexCount;
 	desc.numTriangles              = triangleCount;
 	desc.pointStrideBytes          = sizeof(NxVec3);

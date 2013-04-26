@@ -91,10 +91,12 @@ bool PhysXFluid::initFluid(NxFluidDesc &desc)
 bool PhysXFluid::initFrameActor()
 {
 	NxBoxShapeDesc boxDesc;
+	boxDesc.setToDefault();
 	boxDesc.dimensions.set(1.0, 1.0, 1.0);
 	boxDesc.localPose.t = NxVec3(0.0, 1.0, 0.0);
 
 	NxActorDesc actorDesc;
+	actorDesc.setToDefault();
 	actorDesc.shapes.pushBack(&boxDesc);
 	actorDesc.globalPose.t = NxVec3(0.0, 4.0, 0.0);
 	actorDesc.density = 2;

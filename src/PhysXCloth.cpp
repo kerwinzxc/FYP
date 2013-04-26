@@ -66,16 +66,13 @@ bool PhysXCloth::saveMeshDesc(NxClothMeshDesc &desc, ObjMeshExt* objMesh)
 		faces[i * 3 + 2] = tri.vertexNr[2];
 	}
 
+	desc.setToDefault();
 	desc.numVertices           = vertexCount;
 	desc.numTriangles          = mNumTriangles;
 	desc.pointStrideBytes      = sizeof(NxVec3);
 	desc.triangleStrideBytes   = 3 * sizeof(NxU32);
-	desc.vertexMassStrideBytes = sizeof(NxReal);
-	desc.vertexFlagStrideBytes = sizeof(NxU32);
 	desc.points                = verts;
 	desc.triangles             = faces;
-	desc.vertexMasses          = 0;
-	desc.vertexFlags           = 0;
 	desc.flags                 = 0;
 	desc.flags                |= NX_CLOTH_MESH_WELD_VERTICES;
 	desc.weldingDistance       = 0.5f;
@@ -136,12 +133,8 @@ void PhysXCloth::releaseMeshDescBuffers(const NxClothMeshDesc& desc)
 {
 	NxVec3* y = (NxVec3*)desc.points;
 	NxU32*  t = (NxU32*) desc.triangles;
-	NxReal* m = (NxReal*)desc.vertexMasses;
-	NxU32*  z = (NxU32*) desc.vertexFlags;
 	free(y);
 	free(t);
-	free(m);
-	free(z);
 }
 
 void PhysXCloth::releaseReceiveBuffers()

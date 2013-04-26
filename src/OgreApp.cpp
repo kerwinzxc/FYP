@@ -70,11 +70,11 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 			         0.0 < position.z && position.z < 150.0))
 			{
 				NxReal x = rand() % 30;
-				NxReal y = rand() % 70 ;
+				NxReal y = rand() % 70;
 				NxReal z = rand() % 50;
-				leafDesc.globalPose.t = NxVec3(-90.0 + x, 20.0 + y, 30.0 + z);
+				mLeafDesc.globalPose.t = NxVec3(-90.0 + x, 20.0 + y, 30.0 + z);
 				delete mLeaves[i];
-				mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, leafDesc, &leafObj, i);
+				mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, &mLeafObj, i);
 			}
 			mLeaves[i]->render();
 		}
@@ -101,6 +101,7 @@ String OgreApp::getFilePath(const String& filename)
 void OgreApp::createTerrian()
 {
 	NxTriangleMeshShapeDesc terrainShapeDesc;
+	terrainShapeDesc.setToDefault();
 	terrainShapeDesc.shapeFlags = NX_SF_FEATURE_INDICES;
 
 	char* filepath = strdup(getFilePath("scene.new.obj").c_str());
@@ -112,6 +113,7 @@ void OgreApp::createTerrian()
 void OgreApp::createTree()
 {
 	NxSoftBodyDesc softBodyDesc;
+	softBodyDesc.setToDefault();
 	softBodyDesc.particleRadius                 = 1.0f;
 	softBodyDesc.volumeStiffness                = 0.9f;
 	softBodyDesc.stretchingStiffness            = 1.0f;
@@ -121,7 +123,6 @@ void OgreApp::createTree()
 	softBodyDesc.solverIterations               = 1;
 	softBodyDesc.globalPose.t                   = NxVec3(-80.0, 0.2, 50.0);
 
-	softBodyDesc.flags  = NX_SBF_GRAVITY | NX_SBF_VOLUME_CONSERVATION;
 	softBodyDesc.flags |= NX_SBF_COLLISION_TWOWAY;
 	if (mPhysXSys->getGPUuse())
 		softBodyDesc.flags |= NX_SBF_HARDWARE;
@@ -166,26 +167,24 @@ void OgreApp::createTreeBody()
 
 void OgreApp::createLeaves()
 {
-	leafDesc.thickness           = 0.2f;
-	leafDesc.bendingStiffness    = 1.0;
-	leafDesc.stretchingStiffness = 1.0;
-	leafDesc.dampingCoefficient  = 0.9f;
-	leafDesc.solverIterations    = 5;
-	leafDesc.friction            = 0.01;
-	leafDesc.density             = 1000.0;
+	mLeafDesc.setToDefault();
+	mLeafDesc.thickness           = 0.2f;
+	mLeafDesc.bendingStiffness    = 1.0;
+	mLeafDesc.stretchingStiffness = 1.0;
+	mLeafDesc.dampingCoefficient  = 0.9f;
+	mLeafDesc.solverIterations    = 5;
+	mLeafDesc.friction            = 0.01;
+	mLeafDesc.density             = 1000.0;
 
-	leafDesc.flags  = NX_CLF_GRAVITY;
-	leafDesc.flags |= NX_CLF_DAMPING;
-	leafDesc.flags |= NX_CLF_COMDAMPING;
-	leafDesc.flags |= NX_CLF_COLLISION_TWOWAY;
-	leafDesc.flags |= NX_CLF_VISUALIZATION;
+	mLeafDesc.flags |= NX_CLF_DAMPING;
+	mLeafDesc.flags |= NX_CLF_COMDAMPING;
+	mLeafDesc.flags |= NX_CLF_COLLISION_TWOWAY;
+	mLeafDesc.flags |= NX_CLF_VISUALIZATION;
 	if (mPhysXSys->getGPUuse())
-		leafDesc.flags |= NX_CLF_HARDWARE;
-	else
-		leafDesc.flags &= ~NX_CLF_HARDWARE;
+		mLeafDesc.flags |= NX_CLF_HARDWARE;
 
 	char* filepath = strdup(getFilePath("leaf.obj").c_str());
-	leafObj.loadFromObjFile(filepath);
+	mLeafObj.loadFromObjFile(filepath);
 	free(filepath);
 
 	for (int i = 0; i < mNumLeaves; i++)
@@ -193,14 +192,15 @@ void OgreApp::createLeaves()
 		NxReal x = rand() % 30;
 		NxReal y = rand() % 70 ;
 		NxReal z = rand() % 50;
-		leafDesc.globalPose.t = NxVec3(-90.0 + x, 20.0 + y, 30.0 + z);
-		mLeaves.push_back(new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, leafDesc, &leafObj, i));
+		mLeafDesc.globalPose.t = NxVec3(-90.0 + x, 20.0 + y, 30.0 + z);
+		mLeaves.push_back(new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, &mLeafObj, i));
 	}
 }
 
 void OgreApp::createFluid()
 {
 	NxFluidDesc fluidDesc;
+	fluidDesc.setToDefault();
 	fluidDesc.maxParticles                    = 15000;
 	fluidDesc.kernelRadiusMultiplier          = 2.0f;
 	fluidDesc.restParticlesPerMeter           = 1.5f;
@@ -220,10 +220,8 @@ void OgreApp::createFluid()
 	fluidDesc.numReserveParticles             = 500;
 	fluidDesc.simulationMethod                = NX_F_SPH;
 
-	fluidDesc.flags |= NX_FF_PRIORITY_MODE ;
-	if (mPhysXSys->getGPUuse())
-		fluidDesc.flags |= NX_FF_HARDWARE;
-	else
+	fluidDesc.flags |= NX_FF_PRIORITY_MODE;
+	if (!mPhysXSys->getGPUuse())
 		fluidDesc.flags &= ~NX_FF_HARDWARE;
 
 	mFluid = new PhysXFluid(mPhysXSys->getScene(), mSceneMgr, fluidDesc);
