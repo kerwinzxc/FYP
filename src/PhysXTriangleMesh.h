@@ -1,5 +1,5 @@
-#ifndef _PHYSX_TRIANGLE_MESH_
-#define _PHYSX_TRIANGLE_MESH_
+#ifndef _PHYSX_TRIANGLE_MESH_H_
+#define _PHYSX_TRIANGLE_MESH_H_
 
 #include "Common.h"
 

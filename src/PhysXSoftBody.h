@@ -1,5 +1,5 @@
-#ifndef _PHYSX_SOFTBODY_MESH_
-#define _PHYSX_SOFTBODY_MESH_
+#ifndef _PHYSX_SOFTBODY_H_
+#define _PHYSX_SOFTBODY_H_
 
 #include "ObjMeshExt.h"
 
