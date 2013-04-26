@@ -2,9 +2,12 @@
 
 PhysXFluid::PhysXFluid(NxScene* scene, Ogre::SceneManager* sceneMgr, NxFluidDesc &desc)
 	: mInitDone(false), mScene(scene), mFluid(NULL),
-	  mSceneMgr(sceneMgr), mFluidNode(NULL), mParticleSystem(NULL),
-	  mPositions(NULL), mVelocities(NULL), mCollisonNormals(NULL), mNumOfParticles(0)
+	  mSceneMgr(sceneMgr), mFluidNode(NULL), mParticleSystem(NULL), mNumOfParticles(0)
 {
+	mPositions       = (NxVec3*) malloc(sizeof(NxVec3) * desc.maxParticles);
+	mVelocities      = (NxVec3*) malloc(sizeof(NxVec3) * desc.maxParticles);
+	mCollisonNormals = (NxVec3*) malloc(sizeof(NxVec3) * desc.maxParticles);
+
 	init(desc);
 	initParticleSystem(desc);
 }
@@ -28,6 +31,10 @@ PhysXFluid::~PhysXFluid()
 		mSceneMgr->destroyParticleSystem(mParticleSystem);
 		mParticleSystem = 0;
 	}
+
+	free(mPositions);
+	free(mVelocities);
+	free(mCollisonNormals);
 }
 
 void PhysXFluid::init(NxFluidDesc &desc)
@@ -160,9 +167,6 @@ bool PhysXFluid::initFluidDrain()
 
 void PhysXFluid::allocateReceiveBuffers(NxFluidDesc &desc)
 {
-	mPositions       = new NxVec3[desc.maxParticles];
-	mVelocities      = new NxVec3[desc.maxParticles];
-	mCollisonNormals = new NxVec3[desc.maxParticles];
 	desc.particlesWriteData.bufferPos = &mPositions[0].x;
 	desc.particlesWriteData.bufferPosByteStride = sizeof(NxVec3);
 	desc.particlesWriteData.bufferVel = &mVelocities[0].x;
