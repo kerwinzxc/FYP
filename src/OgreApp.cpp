@@ -16,8 +16,9 @@ OgreApp::~OgreApp()
 	if (mTreeBody.size() > 0)
 		for (std::vector<PhysXCapsule*>::iterator i = mTreeBody.begin(); i != mTreeBody.end(); ++i)
 			delete *i;
-	// if (mLeaves)
-	// 	delete mLeaves;
+	if (mLeaves.size() > 0)
+		for (std::vector<PhysXCloth*>::iterator i = mLeaves.begin(); i != mLeaves.end(); ++i)
+			delete *i;
 	if (mFluid)
 		delete mFluid;
 	delete mPhysXSys;
@@ -41,7 +42,7 @@ void OgreApp::createScene()
 	createTerrian();
 	createTree();
 	createTreeBody();
-	// createLeaves();
+	createLeaves();
 	createFluid();
 }
 
@@ -53,8 +54,23 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 		mPhysXSys->stepPhysX(evt.timeSinceLastFrame);
 	if (mTree)
 		mTree->render();
-	// if (mLeaves)
-	// 	mLeaves->render();
+	if (mLeaves.size() > 0)
+		for (size_t i = 0; i < mLeaves.size(); ++i)
+		{
+			NxVec3 position = mLeaves[i]->getNxCloth()->getPosition(0);
+			if (!(-100.0 < position.x && position.x <  90.0 &&
+			         0.0 < position.y && position.y < 120.0 &&
+			         0.0 < position.z && position.z < 150.0))
+			{
+				NxReal x = rand() % 30;
+				NxReal y = rand() % 70 ;
+				NxReal z = rand() % 50;
+				leafDesc.globalPose.t = NxVec3(-90.0 + x, 20.0 + y, 30.0 + z);
+				delete mLeaves[i];
+				mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, leafDesc, &leafObj, i);
+			}
+			mLeaves[i]->render();
+		}
 	if (mFluid)
 		mFluid->render();
 	return true;
@@ -134,41 +150,46 @@ void OgreApp::createTreeBody()
 	capsuleInfos.push_back(CapsuleInfo(NxVec3(-74.5f, 48.0f, 34.5f), 18.0f, 1.0f, NxVec3( -1.1,  -0.2,  -0.2)));
 
 	for (std::vector<CapsuleInfo>::iterator i = capsuleInfos.begin(); i != capsuleInfos.end(); ++i)
-	{
 		mTreeBody.push_back(new PhysXCapsule(mPhysXSys->getScene(), *i));
-	}
 	capsuleInfos.swap(std::vector<CapsuleInfo>());
 
 	if (mTree)
 		mTree->getNxSoftBody()->attachToCollidingShapes(0);
 }
 
-// void OgreApp::createLeaves()
-// {
-// 	NxClothDesc desc;
-// 	desc.thickness           = 0.5f;
-// 	desc.bendingStiffness    = 1.0;
-// 	desc.stretchingStiffness = 1.0;
-// 	desc.dampingCoefficient  = 0.9f;
-// 	desc.solverIterations    = 5;
-// 	desc.friction            = 0.01;
-// 	desc.density             = 1000.0;
+void OgreApp::createLeaves()
+{
+	leafDesc.thickness           = 0.2f;
+	leafDesc.bendingStiffness    = 1.0;
+	leafDesc.stretchingStiffness = 1.0;
+	leafDesc.dampingCoefficient  = 0.9f;
+	leafDesc.solverIterations    = 5;
+	leafDesc.friction            = 0.01;
+	leafDesc.density             = 1000.0;
 
-// 	desc.flags	 =	NX_CLF_GRAVITY;
-// 	desc.flags	|=	NX_CLF_DAMPING;
-// 	desc.flags  |=	NX_CLF_COMDAMPING;
-// 	desc.flags	|=	NX_CLF_COLLISION_TWOWAY;
-// 	desc.flags	|=	NX_CLF_VISUALIZATION;
-// 	if (mPhysXSys->getGPUuse())
-// 		desc.flags |= NX_CLF_HARDWARE;
-// 	else
-// 		desc.flags &= ~NX_CLF_HARDWARE;
+	leafDesc.flags  = NX_CLF_GRAVITY;
+	leafDesc.flags |= NX_CLF_DAMPING;
+	leafDesc.flags |= NX_CLF_COMDAMPING;
+	leafDesc.flags |= NX_CLF_COLLISION_TWOWAY;
+	leafDesc.flags |= NX_CLF_VISUALIZATION;
+	if (mPhysXSys->getGPUuse())
+		leafDesc.flags |= NX_CLF_HARDWARE;
+	else
+		leafDesc.flags &= ~NX_CLF_HARDWARE;
 
-// 	char* filepath = strdup(getFilePath("leaf.obj").c_str());
-// 	mLeaves = new PhysXClothes(mPhysXSys->getScene(), mSceneMgr, desc, filepath,
-// 	                           NxVec3(-90.0, 20.0, 30.0), 50);
-// 	free(filepath);
-// }
+	char* filepath = strdup(getFilePath("leaf.obj").c_str());
+	leafObj.loadFromObjFile(filepath);
+	free(filepath);
+
+	for (int i = 0; i < mNumLeaves; i++)
+	{
+		NxReal x = rand() % 30;
+		NxReal y = rand() % 70 ;
+		NxReal z = rand() % 50;
+		leafDesc.globalPose.t = NxVec3(-90.0 + x, 20.0 + y, 30.0 + z);
+		mLeaves.push_back(new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, leafDesc, &leafObj, i));
+	}
+}
 
 void OgreApp::createFluid()
 {

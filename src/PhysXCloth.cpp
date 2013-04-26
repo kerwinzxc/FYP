@@ -1,211 +1,175 @@
-#include "PhysXClothes.h"
+#include "PhysXCloth.h"
 #include "ObjMeshExt.h"
 
-PhysXClothes::PhysXClothes(NxScene* scene, Ogre::SceneManager* sceneMgr, NxClothDesc &desc,
-                           char* objFilePath, NxVec3 initPosition, NxU32 numOfClothes)
-	: mInitDone(false), mInitPosition(initPosition), mNumOfClothes(numOfClothes),
-	  mScene(scene), mDesc(desc), mSceneMgr(sceneMgr)
+PhysXCloth::PhysXCloth(NxScene* scene, Ogre::SceneManager* sceneMgr, NxClothDesc &desc,
+                       ObjMeshExt* objMesh, int index)
+	: mInitDone(false), mScene(scene), mCloth(NULL), mClothMesh(NULL),
+	  mSceneMgr(sceneMgr), mClothNode(NULL), mManualObj(NULL),
+	  mNumVertices(0), mNumIndices(0), mMeshDirtyFlags(0)
 {
-	saveMeshDesc(objFilePath);
-	init();
+	mName = objMesh->getName();
+	char* temp;
+	itoa(index, temp, 10);
+	mName.append(temp);
+	mNumTriangles = objMesh->getNumTriangles();
+
+	NxClothMeshDesc meshDesc;
+	saveMeshDesc(meshDesc, objMesh);
+	init(desc, meshDesc);
 	initOgreScene();
 }
 
-PhysXClothes::~PhysXClothes()
+PhysXCloth::~PhysXCloth()
 {
 	if (mInitDone)
 	{
-		releaseMeshDescBuffers();
-		for (size_t i = 0; i < mClothes.size(); ++i)
-			mScene->releaseCloth(*(mClothes[i]));
-		for (size_t i = 0; i < mClothMeshes.size(); ++i)
-			mScene->getPhysicsSDK().releaseClothMesh(*(mClothMeshes[i]));
+		if (mCloth)
+			mScene->releaseCloth(*mCloth);
+		if (mClothMesh)
+			mScene->getPhysicsSDK().releaseClothMesh(*mClothMesh);
 		releaseReceiveBuffers();
 	}
+	mPositions.swap(std::vector<NxVec3>());
+	mNormals.swap(std::vector<NxVec3>());
+	mIndices.swap(std::vector<NxU32>());
+
+	if (mClothNode)
+	{
+		mClothNode->removeAllChildren();
+		mClothNode->getParentSceneNode()->removeChild(mClothNode);
+	}
+	if (mManualObj)
+		mSceneMgr->destroyManualObject(mManualObj);
 }
 
-bool PhysXClothes::saveMeshDesc(char* objFilePath)
+bool PhysXCloth::saveMeshDesc(NxClothMeshDesc &desc, ObjMeshExt* objMesh)
 {
-	ObjMeshExt obj;
-	obj.loadFromObjFile(objFilePath);
-
-	int vertexCount   = obj.getNumVertices();
+	int vertexCount = objMesh->getNumVertices();
 	if (vertexCount == 0)
 		return false;
-
-	mName = obj.getName();
-	mNumTriangles = obj.getNumTriangles();
 
 	NxVec3* verts = new NxVec3[vertexCount];
 	NxU32*  faces = new NxU32[mNumTriangles * 3];
 
 	for (int i = 0; i < vertexCount; i++)
 	{
-		NxVec3 vertex = obj.getVertex(i);
+		NxVec3 vertex = objMesh->getVertex(i);
 		verts[i].x = vertex.x;
 		verts[i].y = vertex.y;
 		verts[i].z = vertex.z;
 	}
 	for (int i = 0; i < mNumTriangles; i++)
 	{
-		ObjMeshTriangle tri = obj.getTriangle(i);
+		ObjMeshTriangle tri = objMesh->getTriangle(i);
 		faces[i * 3]     = tri.vertexNr[0];
 		faces[i * 3 + 1] = tri.vertexNr[1];
 		faces[i * 3 + 2] = tri.vertexNr[2];
 	}
 
-	mMeshDesc.numVertices           = vertexCount;
-	mMeshDesc.numTriangles          = mNumTriangles;
-	mMeshDesc.pointStrideBytes      = sizeof(NxVec3);
-	mMeshDesc.triangleStrideBytes   = 3 * sizeof(NxU32);
-	mMeshDesc.vertexMassStrideBytes = sizeof(NxReal);
-	mMeshDesc.vertexFlagStrideBytes = sizeof(NxU32);
-	mMeshDesc.points                = verts;
-	mMeshDesc.triangles             = faces;
-	mMeshDesc.vertexMasses          = 0;
-	mMeshDesc.vertexFlags           = 0;
-	mMeshDesc.flags                 = 0;
-	mMeshDesc.flags                |= NX_CLOTH_MESH_WELD_VERTICES;
-	mMeshDesc.weldingDistance       = 0.5f;
+	desc.numVertices           = vertexCount;
+	desc.numTriangles          = mNumTriangles;
+	desc.pointStrideBytes      = sizeof(NxVec3);
+	desc.triangleStrideBytes   = 3 * sizeof(NxU32);
+	desc.vertexMassStrideBytes = sizeof(NxReal);
+	desc.vertexFlagStrideBytes = sizeof(NxU32);
+	desc.points                = verts;
+	desc.triangles             = faces;
+	desc.vertexMasses          = 0;
+	desc.vertexFlags           = 0;
+	desc.flags                 = 0;
+	desc.flags                |= NX_CLOTH_MESH_WELD_VERTICES;
+	desc.weldingDistance       = 0.5f;
 
 	return true;
 }
 
-void PhysXClothes::init()
+void PhysXCloth::init(NxClothDesc &desc, NxClothMeshDesc &meshDesc)
 {
-	mReceiveBuffers = (NxMeshData*) malloc(sizeof(NxMeshData) * mNumOfClothes);
-	mNumVertices    = (NxU32*)      malloc(sizeof(NxU32) * mNumOfClothes);
-	mNumIndices     = (NxU32*)      malloc(sizeof(NxU32) * mNumOfClothes);
-	mMeshDirtyFlags = (NxU32*)      malloc(sizeof(NxU32) * mNumOfClothes);
+	allocateReceiveBuffers(meshDesc.numVertices, meshDesc.numTriangles);
+	cookMesh(meshDesc);
+	releaseMeshDescBuffers(meshDesc);
 
-	for (NxU32 i = 0; i < mNumOfClothes; i++)
-	{
-		mPositions.push_back(new NxVec3[mMeshDesc.numVertices]);
-		mNormals.push_back(new NxVec3[mMeshDesc.numVertices]);
-		mIndices.push_back(new NxU32[mMeshDesc.numTriangles * 3]);
+	desc.clothMesh = mClothMesh;
+	desc.meshData  = mReceiveBuffers;
 
-		mNumVertices[i]    = 0;
-		mNumIndices[i]     = 0;
-		mMeshDirtyFlags[i] = 0;
-
-		createCloth(i);
-	}
-	mPositions.resize(mNumOfClothes);
-	mNormals.resize(mNumOfClothes);
-	mIndices.resize(mNumOfClothes);
+	assert(desc.isValid());
+	mCloth = mScene->createCloth(desc);
+	mCloth->wakeUp();
 }
 
-void PhysXClothes::allocateReceiveBuffers(NxU32 numVertices, NxU32 numTriangles, NxU32 offset)
+void PhysXCloth::allocateReceiveBuffers(NxU32 numVertices, NxU32 numTriangles)
 {
-	mReceiveBuffers[offset].setToDefault();
-	mReceiveBuffers[offset].verticesPosBegin         = &(mPositions[offset][0].x);
-	mReceiveBuffers[offset].verticesPosByteStride    = sizeof(NxVec3);
-	mReceiveBuffers[offset].verticesNormalBegin      = &(mNormals[offset][0].x);
-	mReceiveBuffers[offset].verticesNormalByteStride = sizeof(NxVec3);
-	mReceiveBuffers[offset].indicesBegin             = &(mIndices[offset][0]);
-	mReceiveBuffers[offset].indicesByteStride        = sizeof(NxU32);
+	mPositions.resize(numVertices);
+	mNormals.resize(numVertices);
+	mIndices.resize(numTriangles * 3);
 
-	mReceiveBuffers[offset].maxVertices              = numVertices;
-	mReceiveBuffers[offset].numVerticesPtr           = &mNumVertices[offset];
-	mReceiveBuffers[offset].maxIndices               = numTriangles * 3;
-	mReceiveBuffers[offset].numIndicesPtr            = &mNumIndices[offset];
-	mReceiveBuffers[offset].dirtyBufferFlagsPtr      = &mMeshDirtyFlags[offset];
+	mReceiveBuffers.setToDefault();
+	mReceiveBuffers.verticesPosBegin         = &(mPositions[0].x);
+	mReceiveBuffers.verticesPosByteStride    = sizeof(NxVec3);
+	mReceiveBuffers.verticesNormalBegin      = &(mNormals[0].x);
+	mReceiveBuffers.verticesNormalByteStride = sizeof(NxVec3);
+	mReceiveBuffers.indicesBegin             = &(mIndices[0]);
+	mReceiveBuffers.indicesByteStride        = sizeof(NxU32);
+	mReceiveBuffers.maxVertices              = numVertices;
+	mReceiveBuffers.numVerticesPtr           = &mNumVertices;
+	mReceiveBuffers.maxIndices               = numTriangles * 3;
+	mReceiveBuffers.numIndicesPtr            = &mNumIndices;
+	mReceiveBuffers.dirtyBufferFlagsPtr      = &mMeshDirtyFlags;
 }
 
-bool PhysXClothes::cookMesh(NxU32 offset)
+bool PhysXCloth::cookMesh(NxClothMeshDesc &desc)
 {
-	assert(mMeshDesc.isValid());
+	assert(desc.isValid());
 
 	MemoryWriteBuffer wb;
-	if (!NxCookClothMesh(mMeshDesc, wb))
+	if (!NxCookClothMesh(desc, wb))
 		return false;
 	MemoryReadBuffer rb(wb.data);
-	mClothMeshes.push_back(mScene->getPhysicsSDK().createClothMesh(rb));
+	mClothMesh = mScene->getPhysicsSDK().createClothMesh(rb);
 
 	return true;
 }
 
-void PhysXClothes::createCloth(NxU32 offset)
+void PhysXCloth::releaseMeshDescBuffers(const NxClothMeshDesc& desc)
 {
-	allocateReceiveBuffers(mMeshDesc.numVertices, mMeshDesc.numTriangles, offset);
-	cookMesh(offset);
-
-	NxVec3 vec;
-	vec.x = rand() % 30;
-	vec.y = rand() % 70;
-	vec.z = rand() % 50;
-	mDesc.globalPose.t = mInitPosition + vec;
-	mDesc.clothMesh = mClothMeshes[offset];
-	mDesc.meshData  = mReceiveBuffers[offset];
-
-	assert(mDesc.isValid());
-	mClothes.push_back(mScene->createCloth(mDesc));
-	mClothes[offset]->wakeUp();
-}
-
-void PhysXClothes::releaseMeshDescBuffers()
-{
-	NxVec3* y = (NxVec3*)mMeshDesc.points;
-	NxU32*  t = (NxU32*) mMeshDesc.triangles;
-	NxReal* m = (NxReal*)mMeshDesc.vertexMasses;
-	NxU32*  z = (NxU32*) mMeshDesc.vertexFlags;
+	NxVec3* y = (NxVec3*)desc.points;
+	NxU32*  t = (NxU32*) desc.triangles;
+	NxReal* m = (NxReal*)desc.vertexMasses;
+	NxU32*  z = (NxU32*) desc.vertexFlags;
 	free(y);
 	free(t);
 	free(m);
 	free(z);
 }
 
-void PhysXClothes::releaseReceiveBuffers()
+void PhysXCloth::releaseReceiveBuffers()
 {
-	for (NxU32 i = 0; i < mNumOfClothes; i++)
-	{
-		free(mReceiveBuffers[i].parentIndicesBegin);
-		mReceiveBuffers[i].setToDefault();
-	}
+	free(mReceiveBuffers.parentIndicesBegin);
+	mReceiveBuffers.setToDefault();
 }
 
-void PhysXClothes::initOgreScene()
+void PhysXCloth::initOgreScene()
 {
 	mManualObj = mSceneMgr->createManualObject(mName);
-	mClothesNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-	mClothesNode->attachObject(mManualObj);
+	mClothNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+	mClothNode->attachObject(mManualObj);
 }
 
-void PhysXClothes::render()
+void PhysXCloth::render()
 {
 	mManualObj->clear();
 	mManualObj->begin("", Ogre::RenderOperation::OT_TRIANGLE_LIST);
-	for (NxU32 i = 0; i < mNumOfClothes; i++)
+
+	for (NxU32 i = 0; i < mNumVertices; i++)
 	{
-		NxVec3 position = mClothes[i]->getPosition(0);
-		if (!(-100.0 < position.x && position.x < 90.0 &&
-		         0.0 < position.y && position.y < 120.0 &&
-		         0.0 < position.z && position.z < 150.0))
-		{
-			mScene->releaseCloth(*(mClothes[i]));
-			mScene->getPhysicsSDK().releaseClothMesh(*(mClothMeshes[i]));
-			createCloth(i);
-		}
-
-		for (NxU32 j = 0; j < mNumVertices[i]; j++)
-		{
-			Ogre::Vector3 pos = Ogre::Vector3(mPositions[i][j].x,
-			                                  mPositions[i][j].y,
-			                                  mPositions[i][j].z);
-			mManualObj->position(pos);
-			Ogre::Vector3 nor = Ogre::Vector3(mNormals[i][j].x,
-			                                  mNormals[i][j].y,
-			                                  mNormals[i][j].z);
-			mManualObj->normal(nor);
-			mManualObj->colour(Ogre::ColourValue::Green);
-		}
-
-		for(NxU32 j = 0; j < mNumTriangles; j++)
-		{
-			mManualObj->triangle(mIndices[i][j * 3],
-			                     mIndices[i][j * 3 + 1],
-			                     mIndices[i][j * 3 + 2]);
-		}
+		Ogre::Vector3 pos = Ogre::Vector3(mPositions[i].x, mPositions[i].y, mPositions[i].z);
+		mManualObj->position(pos);
+		Ogre::Vector3 nor = Ogre::Vector3(mNormals[i].x, mNormals[i].y, mNormals[i].z);
+		mManualObj->normal(nor);
+		mManualObj->colour(Ogre::ColourValue::Green);
 	}
+	for (NxU32 i = 0; i < mNumTriangles; i++)
+		mManualObj->triangle(mIndices[i * 3], mIndices[i * 3 + 1], mIndices[i * 3 + 2]);
+
 	mManualObj->end();
 }

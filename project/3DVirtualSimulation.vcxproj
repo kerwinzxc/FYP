@@ -26,6 +26,7 @@
     <ClCompile Include="..\src\ObjMeshExt.cpp" />
     <ClCompile Include="..\src\OgreApp.cpp" />
     <ClCompile Include="..\src\PhysXCapsule.cpp" />
+    <ClCompile Include="..\src\PhysXCloth.cpp" />
     <ClCompile Include="..\src\PhysXFluid.cpp" />
     <ClCompile Include="..\src\PhysXSoftBody.cpp" />
     <ClCompile Include="..\src\PhysXSystem.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="..\src\ObjMeshExt.h" />
     <ClInclude Include="..\src\OgreApp.h" />
     <ClInclude Include="..\src\PhysXCapsule.h" />
+    <ClInclude Include="..\src\PhysXCloth.h" />
     <ClInclude Include="..\src\PhysXFluid.h" />
     <ClInclude Include="..\src\PhysXSoftBody.h" />
     <ClInclude Include="..\src\PhysXSystem.h" />
