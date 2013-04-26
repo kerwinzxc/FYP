@@ -19,6 +19,7 @@ public:
 
 protected:
 	virtual bool configure();
+	virtual void createCamera();
 	virtual void createScene();
 	virtual bool frameStarted(const FrameEvent& evt);
 

@@ -37,6 +37,13 @@ bool OgreApp::configure()
 	}
 }
 
+void OgreApp::createCamera()
+{
+	BaseApplication::createCamera();
+	mCamera->setPosition(70.0, 80.0, 350.0);
+	mCamera->lookAt(-50.0, 0.0, 20.0);
+}
+
 void OgreApp::createScene()
 {
 	createTerrian();
