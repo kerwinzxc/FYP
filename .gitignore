@@ -13,3 +13,4 @@ ipch/
 memory_failure_log.txt
 ogre.cfg
 Ogre.log
+screenshot*.jpg
