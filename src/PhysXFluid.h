@@ -40,7 +40,6 @@ private:
 	NxScene*        mScene;
 	NxFluid*        mFluid;
 	NxActor*        mFrameActor;
-	NxFluidEmitter* mFluidEmitter;
 	NxActor*        mFluidDrain;
 
 	Ogre::SceneManager*   mSceneMgr;

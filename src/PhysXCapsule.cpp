@@ -1,7 +1,7 @@
 #include "PhysXCapsule.h"
 
 PhysXCapsule::PhysXCapsule(NxScene* scene, const CapsuleInfo& info)
-	: mScene(scene), mCapsule(NULL)
+	: mScene(scene), mCapsule(NULL), mInvisible(0)
 {
 	createCapsule(info);
 }
