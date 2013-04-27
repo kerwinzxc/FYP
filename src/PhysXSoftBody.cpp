@@ -1,14 +1,11 @@
 #include "PhysXSoftBody.h"
 
 PhysXSoftBody::PhysXSoftBody(NxScene *scene, Ogre::SceneManager* sceneMgr, NxSoftBodyDesc &desc,
-                             char* objFilePath)
+                             ObjMeshExt* objMesh)
 	: mInitDone(false), mScene(scene), mSoftBodyMesh(NULL), mSoftBody(NULL),
-	  mSceneMgr(sceneMgr), mSoftBodyNode(NULL), mEntity(NULL)
+	  mSceneMgr(sceneMgr), mSoftBodyNode(NULL), mEntity(NULL), mObjMesh(objMesh)
 {
-	mObjMesh = new ObjMeshExt();
-	mObjMesh->loadFromObjFile(objFilePath);
 	mVertexOffsets.resize(mObjMesh->getNumMaterials()); mVertexOffsets.clear();
-
 	NxSoftBodyMeshDesc meshDesc;
 	saveMeshDesc(meshDesc);
 	init(desc, meshDesc);
@@ -25,8 +22,6 @@ PhysXSoftBody::~PhysXSoftBody()
 			mScene->getPhysicsSDK().releaseSoftBodyMesh(*mSoftBodyMesh);
 		releaseReceiveBuffers();
 	}
-	if (mObjMesh)
-		delete mObjMesh;
 	mVertexOffsets.swap(std::vector<int>());
 }
 

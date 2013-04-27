@@ -7,7 +7,7 @@ class PhysXSoftBody
 {
 public:
 	PhysXSoftBody(NxScene* scene, Ogre::SceneManager* sceneMgr,
-	              NxSoftBodyDesc &desc, char* objFilePath);
+	              NxSoftBodyDesc &desc, ObjMeshExt* objMesh);
 	~PhysXSoftBody();
 
 	NxSoftBody* getNxSoftBody() {return mSoftBody;}

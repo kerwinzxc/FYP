@@ -1,6 +1,7 @@
 #include "OgreApp.h"
 
-OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL)
+OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
+                     mTerrianObj(NULL), mTreeObj(NULL), mLeafObj(NULL)
 {
 	mPhysXSys = new PhysXSystem();
 }
@@ -8,6 +9,12 @@ OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL)
 OgreApp::~OgreApp()
 {
 	mSceneMgr->destroyAllCameras();
+	if (mTerrianObj)
+		delete mTerrianObj;
+	if (mTreeObj)
+		delete mTreeObj;
+	if (mLeafObj)
+		delete mLeafObj;
 	delete mPhysXSys;
 }
 
@@ -67,7 +74,7 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 				NxReal z = rand() % 50;
 				mLeafDesc.globalPose.t = NxVec3(-90.0 + x, 20.0 + y, 30.0 + z);
 				delete mLeaves[i];
-				mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, &mLeafObj, i);
+				mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, mLeafObj, i);
 			}
 			mLeaves[i]->render();
 		}
@@ -113,10 +120,16 @@ void OgreApp::createTerrian()
 	terrainShapeDesc.setToDefault();
 	terrainShapeDesc.shapeFlags = NX_SF_FEATURE_INDICES;
 
-	char* filepath = strdup(getFilePath("scene.new.obj").c_str());
+	if (mTerrianObj == NULL)
+	{
+		mTerrianObj = new ObjMeshExt();
+		char* filepath = strdup(getFilePath("scene.new.obj").c_str());
+		mTerrianObj->loadFromObjFile(filepath);
+		free(filepath);
+	}
+
 	mTerrian = new PhysXTriangleMesh(mPhysXSys->getScene(), mSceneMgr, terrainShapeDesc,
-	                                 filepath);
-	free(filepath);
+	                                 mTerrianObj);
 }
 
 void OgreApp::createTree()
@@ -136,9 +149,15 @@ void OgreApp::createTree()
 	if (mPhysXSys->getGPUuse())
 		softBodyDesc.flags |= NX_SBF_HARDWARE;
 
-	char* filepath = strdup(getFilePath("tree.obj").c_str());
-	mTree = new PhysXSoftBody(mPhysXSys->getScene(), mSceneMgr, softBodyDesc, filepath);
-	free(filepath);
+	if (mTreeObj == NULL)
+	{
+		mTreeObj = new ObjMeshExt();
+		char* filepath = strdup(getFilePath("tree.obj").c_str());
+		mTreeObj->loadFromObjFile(filepath);
+		free(filepath);
+	}
+
+	mTree = new PhysXSoftBody(mPhysXSys->getScene(), mSceneMgr, softBodyDesc, mTreeObj);
 }
 
 void OgreApp::createTreeBody()
@@ -193,9 +212,13 @@ void OgreApp::createLeaves()
 	if (mPhysXSys->getGPUuse())
 		mLeafDesc.flags |= NX_CLF_HARDWARE;
 
-	char* filepath = strdup(getFilePath("leaf.obj").c_str());
-	mLeafObj.loadFromObjFile(filepath);
-	free(filepath);
+	if (mLeafObj == NULL)
+	{
+		mLeafObj = new ObjMeshExt();
+		char* filepath = strdup(getFilePath("leaf.obj").c_str());
+		mLeafObj->loadFromObjFile(filepath);
+		free(filepath);
+	}
 
 	mLeaves.resize(mNumLeaves);
 	for (int i = 0; i < mNumLeaves; i++)
@@ -204,7 +227,7 @@ void OgreApp::createLeaves()
 		NxReal y = rand() % 70 ;
 		NxReal z = rand() % 50;
 		mLeafDesc.globalPose.t = NxVec3(-90.0 + x, 20.0 + y, 30.0 + z);
-		mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, &mLeafObj, i);
+		mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, mLeafObj, i);
 	}
 }
 

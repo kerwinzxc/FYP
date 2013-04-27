@@ -44,7 +44,10 @@ private:
 	std::vector<PhysXCloth*>   mLeaves;
 
 	NxClothDesc mLeafDesc;
-	ObjMeshExt  mLeafObj;
+
+	ObjMeshExt* mTerrianObj;
+	ObjMeshExt* mTreeObj;
+	ObjMeshExt* mLeafObj;
 
 	static const int mNumLeaves = 50;
 };

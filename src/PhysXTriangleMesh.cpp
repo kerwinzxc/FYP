@@ -1,13 +1,12 @@
 #include "PhysXTriangleMesh.h"
-#include "ObjMeshExt.h"
 
 PhysXTriangleMesh::PhysXTriangleMesh(NxScene *scene, Ogre::SceneManager* sceneMgr,
-                                     NxTriangleMeshShapeDesc &desc, char* objFilePath)
+                                     NxTriangleMeshShapeDesc &desc, ObjMeshExt* objMesh)
 	: mInitDone(false), mScene(scene), mTriangleMesh(NULL), mActor(NULL),
 	  mSceneMgr(sceneMgr), mManualObj(NULL)
 {
 	NxTriangleMeshDesc meshDesc;
-	saveMeshDesc(meshDesc, objFilePath);
+	saveMeshDesc(meshDesc, objMesh);
 	init(desc, meshDesc);
 }
 
@@ -22,13 +21,10 @@ PhysXTriangleMesh::~PhysXTriangleMesh()
 	}
 }
 
-bool PhysXTriangleMesh::saveMeshDesc(NxTriangleMeshDesc &desc, char* filepath)
+bool PhysXTriangleMesh::saveMeshDesc(NxTriangleMeshDesc &desc, ObjMeshExt* objMesh)
 {
-	ObjMeshExt obj;
-	obj.loadFromObjFile(filepath);
-
-	int vertexCount    = obj.getNumVertices();
-	int triangleCount  = obj.getNumTriangles();
+	int vertexCount    = objMesh->getNumVertices();
+	int triangleCount  = objMesh->getNumTriangles();
 
 	if (vertexCount == 0)
 		return false;
@@ -38,7 +34,7 @@ bool PhysXTriangleMesh::saveMeshDesc(NxTriangleMeshDesc &desc, char* filepath)
 
 	if (mSceneMgr != NULL)
 	{
-		mManualObj = mSceneMgr->createManualObject(obj.getName());
+		mManualObj = mSceneMgr->createManualObject(objMesh->getName());
 	}
 	else
 	{
@@ -52,14 +48,14 @@ bool PhysXTriangleMesh::saveMeshDesc(NxTriangleMeshDesc &desc, char* filepath)
 
 	std::vector<int> vertexOffsets;
 	std::vector<int> triOffsets;
-	vertexOffsets.resize(obj.getNumMaterials()); vertexOffsets.clear();
-	triOffsets.resize(obj.getNumMaterials());    triOffsets.clear();
+	vertexOffsets.resize(objMesh->getNumMaterials()); vertexOffsets.clear();
+	triOffsets.resize(objMesh->getNumMaterials());    triOffsets.clear();
 
-	int prevMat = obj.getTriangle(0).materialNr;
+	int prevMat = objMesh->getTriangle(0).materialNr;
 	int max = -1;
 	for (int j = 0; j < triangleCount; j++)
 	{
-		ObjMeshTriangle tri = obj.getTriangle(j);
+		ObjMeshTriangle tri = objMesh->getTriangle(j);
 		faces[j * 3]     = tri.vertexNr[0];
 		faces[j * 3 + 1] = tri.vertexNr[1];
 		faces[j * 3 + 2] = tri.vertexNr[2];
@@ -82,16 +78,16 @@ bool PhysXTriangleMesh::saveMeshDesc(NxTriangleMeshDesc &desc, char* filepath)
 	int j = 0, k = 0, offset = 0;
 	for (size_t i = 0; i < vertexOffsets.size(); ++i)
 	{
-		ObjMeshMaterial material = obj.getMaterial(i);
+		ObjMeshMaterial material = objMesh->getMaterial(i);
 		mManualObj->begin(material.name, Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 		for (; j <= vertexOffsets[i]; j++)
 		{
-			NxVec3 vertex = obj.getVertex(j);
+			NxVec3 vertex = objMesh->getVertex(j);
 			mManualObj->position(vertex.x, vertex.y, vertex.z);
-			NxVec3 normal = obj.getNormal(j);
+			NxVec3 normal = objMesh->getNormal(j);
 			mManualObj->normal(normal.x, normal.y, normal.z);
-			TexCoord texCoord = obj.getTexCoord(j);
+			TexCoord texCoord = objMesh->getTexCoord(j);
 			mManualObj->textureCoord(texCoord.u, texCoord.v);
 
 			verts[j].x = vertex.x;
@@ -100,7 +96,7 @@ bool PhysXTriangleMesh::saveMeshDesc(NxTriangleMeshDesc &desc, char* filepath)
 		}
 		for (; k <= triOffsets[i]; k++)
 		{
-			ObjMeshTriangle tri = obj.getTriangle(k);
+			ObjMeshTriangle tri = objMesh->getTriangle(k);
 			mManualObj->triangle(tri.vertexNr[0] - offset, tri.vertexNr[1] - offset, tri.vertexNr[2] - offset);
 		}
 		offset = vertexOffsets[i] + 1;

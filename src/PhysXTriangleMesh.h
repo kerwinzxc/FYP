@@ -1,19 +1,19 @@
 #ifndef _PHYSX_TRIANGLE_MESH_H_
 #define _PHYSX_TRIANGLE_MESH_H_
 
-#include "Common.h"
+#include "ObjMeshExt.h"
 
 class PhysXTriangleMesh
 {
 public:
 	PhysXTriangleMesh(NxScene* scene, Ogre::SceneManager* sceneMgr,
-	                  NxTriangleMeshShapeDesc &desc, char* objFilePath);
+	                  NxTriangleMeshShapeDesc &desc, ObjMeshExt* objMesh);
 	~PhysXTriangleMesh();
 
 	NxActor* getNxActor() {return mActor;}
 
 private:
-	bool saveMeshDesc(NxTriangleMeshDesc &desc, char* filepath);
+	bool saveMeshDesc(NxTriangleMeshDesc &desc, ObjMeshExt* objMesh);
 	void init(NxTriangleMeshShapeDesc &desc, NxTriangleMeshDesc &meshDesc);
 	bool cookMesh(NxTriangleMeshDesc& desc);
 	void releaseMeshDescBuffers(const NxTriangleMeshDesc& desc);
