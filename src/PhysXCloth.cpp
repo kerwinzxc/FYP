@@ -8,6 +8,7 @@ PhysXCloth::PhysXCloth(NxScene* scene, Ogre::SceneManager* sceneMgr, NxClothDesc
 	  mNumVertices(0), mNumIndices(0), mMeshDirtyFlags(0)
 {
 	mName = objMesh->getName();
+	mMaterial = Ogre::String(objMesh->getMaterial(0).name);
 	char* temp;
 	itoa(index, temp, 10);
 	mName.append(temp);
@@ -153,7 +154,7 @@ void PhysXCloth::initOgreScene()
 void PhysXCloth::render()
 {
 	mManualObj->clear();
-	mManualObj->begin("Vegetation_Blur7", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+	mManualObj->begin(mMaterial, Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 	for (NxU32 i = 0; i < mNumVertices; i++)
 	{

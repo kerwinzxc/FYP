@@ -33,6 +33,7 @@ private:
 	Ogre::SceneNode*    mClothNode;
 	Ogre::ManualObject* mManualObj;
 	Ogre::String        mName;
+	Ogre::String        mMaterial;
 
 	std::vector<NxVec3> mPositions;
 	std::vector<NxVec3> mNormals;
