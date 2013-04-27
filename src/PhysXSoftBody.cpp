@@ -23,6 +23,14 @@ PhysXSoftBody::~PhysXSoftBody()
 		releaseReceiveBuffers();
 	}
 	mVertexOffsets.swap(std::vector<int>());
+
+	if (mSoftBodyNode)
+	{
+		mSoftBodyNode->removeAndDestroyAllChildren();
+		mSceneMgr->destroySceneNode(mSoftBodyNode);
+	}
+	if (mEntity)
+		mSceneMgr->destroyEntity(mEntity);
 }
 
 bool PhysXSoftBody::saveMeshDesc(NxSoftBodyMeshDesc &desc)

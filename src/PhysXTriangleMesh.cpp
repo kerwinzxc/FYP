@@ -19,6 +19,14 @@ PhysXTriangleMesh::~PhysXTriangleMesh()
 		if (mTriangleMesh)
 			mScene->getPhysicsSDK().releaseTriangleMesh(*mTriangleMesh);
 	}
+
+	if (mTriangleNode)
+	{
+		mTriangleNode->removeAndDestroyAllChildren();
+		mSceneMgr->destroySceneNode(mTriangleNode);
+	}
+	if (mManualObj)
+		mSceneMgr->destroyManualObject(mManualObj);
 }
 
 bool PhysXTriangleMesh::saveMeshDesc(NxTriangleMeshDesc &desc, ObjMeshExt* objMesh)

@@ -51,7 +51,6 @@ void OgreApp::createScene()
 void OgreApp::destroyScene()
 {
 	clearPhysX();
-	mSceneMgr->clearScene();
 }
 
 bool OgreApp::frameStarted(const FrameEvent& evt)
