@@ -128,7 +128,7 @@ void OgreApp::createTerrian()
 	if (mTerrianObj == NULL)
 	{
 		mTerrianObj = new ObjMeshExt();
-		char* filepath = strdup(getFilePath("scene.new.obj").c_str());
+		char* filepath = strdup(getFilePath("scene.obj").c_str());
 		mTerrianObj->loadFromObjFile(filepath);
 		free(filepath);
 	}
