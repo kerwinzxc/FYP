@@ -23,6 +23,7 @@ protected:
 	virtual void createScene();
 	virtual void destroyScene();
 	virtual bool frameStarted(const FrameEvent& evt);
+	virtual bool keyPressed(const OIS::KeyEvent &arg);
 
 private:
 	String getFilePath(const String& filename);

@@ -3,13 +3,11 @@
 OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL)
 {
 	mPhysXSys = new PhysXSystem();
-	// mPhysXSys->setGPUuse(false);
-	mPhysXSys->initPhysX();
 }
 
 OgreApp::~OgreApp()
 {
-	mSceneMgr->destroyAllCameras();	
+	mSceneMgr->destroyAllCameras();
 	delete mPhysXSys;
 }
 
@@ -76,6 +74,22 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 	if (mFluid)
 		mFluid->render();
 	return true;
+}
+
+bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
+{
+	if (mTrayMgr->isDialogVisible()) return true;
+
+	if (arg.key == OIS::KC_C)
+	{
+		destroyScene();
+		if (mPhysXSys->getGPUuse())
+			mPhysXSys->setGPUuse(false);
+		else
+			mPhysXSys->setGPUuse(true);
+		createScene();
+	}
+	return BaseApplication::keyPressed(arg);
 }
 
 String OgreApp::getFilePath(const String& filename)
@@ -152,8 +166,9 @@ void OgreApp::createTreeBody()
 	capsuleInfos.push_back(CapsuleInfo(NxVec3(-78.5f, 27.0f, 39.5f), 25.0f, 1.0f, NxVec3( -0.6,  -0.2,   0.0)));
 	capsuleInfos.push_back(CapsuleInfo(NxVec3(-74.5f, 48.0f, 34.5f), 18.0f, 1.0f, NxVec3( -1.1,  -0.2,  -0.2)));
 
-	for (std::vector<CapsuleInfo>::iterator i = capsuleInfos.begin(); i != capsuleInfos.end(); ++i)
-		mTreeBody.push_back(new PhysXCapsule(mPhysXSys->getScene(), *i));
+	mTreeBody.resize(capsuleInfos.size());
+	for (size_t i = 0; i < capsuleInfos.size(); ++i)
+		mTreeBody[i] = new PhysXCapsule(mPhysXSys->getScene(), capsuleInfos[i]);
 	capsuleInfos.swap(std::vector<CapsuleInfo>());
 
 	if (mTree)
@@ -182,13 +197,14 @@ void OgreApp::createLeaves()
 	mLeafObj.loadFromObjFile(filepath);
 	free(filepath);
 
+	mLeaves.resize(mNumLeaves);
 	for (int i = 0; i < mNumLeaves; i++)
 	{
 		NxReal x = rand() % 30;
 		NxReal y = rand() % 70 ;
 		NxReal z = rand() % 50;
 		mLeafDesc.globalPose.t = NxVec3(-90.0 + x, 20.0 + y, 30.0 + z);
-		mLeaves.push_back(new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, &mLeafObj, i));
+		mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, &mLeafObj, i);
 	}
 }
 
