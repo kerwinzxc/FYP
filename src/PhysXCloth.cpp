@@ -35,8 +35,8 @@ PhysXCloth::~PhysXCloth()
 
 	if (mClothNode)
 	{
-		mClothNode->removeAllChildren();
-		mClothNode->getParentSceneNode()->removeChild(mClothNode);
+		mClothNode->removeAndDestroyAllChildren();
+		mSceneMgr->destroySceneNode(mClothNode);
 	}
 	if (mManualObj)
 		mSceneMgr->destroyManualObject(mManualObj);

@@ -9,18 +9,7 @@ OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL)
 
 OgreApp::~OgreApp()
 {
-	if (mTerrian)
-		delete mTerrian;
-	if (mTree)
-		delete mTree;
-	if (mTreeBody.size() > 0)
-		for (std::vector<PhysXCapsule*>::iterator i = mTreeBody.begin(); i != mTreeBody.end(); ++i)
-			delete *i;
-	if (mLeaves.size() > 0)
-		for (std::vector<PhysXCloth*>::iterator i = mLeaves.begin(); i != mLeaves.end(); ++i)
-			delete *i;
-	if (mFluid)
-		delete mFluid;
+	mSceneMgr->destroyAllCameras();	
 	delete mPhysXSys;
 }
 
@@ -51,6 +40,12 @@ void OgreApp::createScene()
 	createTreeBody();
 	createLeaves();
 	createFluid();
+}
+
+void OgreApp::destroyScene()
+{
+	clearPhysX();
+	mSceneMgr->clearScene();
 }
 
 bool OgreApp::frameStarted(const FrameEvent& evt)
@@ -225,4 +220,20 @@ void OgreApp::createFluid()
 		fluidDesc.flags &= ~NX_FF_HARDWARE;
 
 	mFluid = new PhysXFluid(mPhysXSys->getScene(), mSceneMgr, fluidDesc);
+}
+
+void OgreApp::clearPhysX()
+{
+	if (mTerrian)
+		delete mTerrian;
+	if (mTree)
+		delete mTree;
+	if (mTreeBody.size() > 0)
+		for (std::vector<PhysXCapsule*>::iterator i = mTreeBody.begin(); i != mTreeBody.end(); ++i)
+			delete *i;
+	if (mLeaves.size() > 0)
+		for (std::vector<PhysXCloth*>::iterator i = mLeaves.begin(); i != mLeaves.end(); ++i)
+			delete *i;
+	if (mFluid)
+		delete mFluid;
 }

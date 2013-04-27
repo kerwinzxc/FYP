@@ -21,6 +21,7 @@ protected:
 	virtual bool configure();
 	virtual void createCamera();
 	virtual void createScene();
+	virtual void destroyScene();
 	virtual bool frameStarted(const FrameEvent& evt);
 
 private:
@@ -31,6 +32,7 @@ private:
 	void createTreeBody();
 	void createLeaves();
 	void createFluid();
+	void clearPhysX();
 
 	PhysXSystem*       mPhysXSys;
 	PhysXTriangleMesh* mTerrian;
