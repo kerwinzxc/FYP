@@ -50,6 +50,7 @@ private:
 	ObjMeshExt* mLeafObj;
 
 	bool mLastGPUState;
+	bool mWind;
 
 	static const int mNumLeaves = 50;
 };

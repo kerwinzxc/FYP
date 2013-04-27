@@ -1,7 +1,8 @@
 #include "OgreApp.h"
 
 OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
-                     mTerrianObj(NULL), mTreeObj(NULL), mLeafObj(NULL), mLastGPUState(true)
+                     mTerrianObj(NULL), mTreeObj(NULL), mLeafObj(NULL),
+                     mLastGPUState(true), mWind(true)
 {
 	mPhysXSys = new PhysXSystem();
 	mPhysXSys->initPhysX();
@@ -57,7 +58,15 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 {
 	mPhysXSys->stepPhysX(1.0f / 60.0f);
 	if (mTree)
+	{
+		if (mWind)
+			mTree->getNxSoftBody()->setExternalAcceleration(NxVec3(NxMath::rand( 0.0f, 1.0f),
+			                                                       NxMath::rand(-1.0f, 2.0f),
+			                                                       NxMath::rand(-1.0f, 2.0f)));
+		else
+			mTree->getNxSoftBody()->setExternalAcceleration(NxVec3(0.0f, 0.0f, 0.0f));
 		mTree->render();
+	}
 	if (mLeaves.size() > 0)
 		for (size_t i = 0; i < mLeaves.size(); ++i)
 		{
@@ -73,6 +82,12 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 				delete mLeaves[i];
 				mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, mLeafObj, i);
 			}
+			if (mWind)
+				mLeaves[i]->getNxCloth()->setWindAcceleration(
+				  mTree->getNxSoftBody()->getExternalAcceleration() + NxVec3(
+				  NxMath::rand(5.0f, 25.0f),NxMath::rand(9.8f, 10.0f),NxMath::rand(0.0f, 4.0f)));
+			else
+				mLeaves[i]->getNxCloth()->setWindAcceleration(NxVec3(0.0f, 0.0f, 0.0f));
 			mLeaves[i]->render();
 		}
 	if (mFluid)
@@ -100,6 +115,13 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 		}
 		mPhysXSys->initPhysX();
 		createScene();
+	}
+	else if (arg.key == OIS::KC_Q)
+	{
+		if (mWind)
+			mWind = false;
+		else
+			mWind = true;
 	}
 	return BaseApplication::keyPressed(arg);
 }
