@@ -49,6 +49,8 @@ private:
 	ObjMeshExt* mTreeObj;
 	ObjMeshExt* mLeafObj;
 
+	bool mLastGPUState;
+
 	static const int mNumLeaves = 50;
 };
 

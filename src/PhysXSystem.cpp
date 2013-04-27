@@ -6,7 +6,6 @@ PhysXSystem::PhysXSystem()
 	  mCookingInitialized(false),
 	  mUseGPU(true)
 {
-	initPhysX();
 }
 
 PhysXSystem::~PhysXSystem()
@@ -19,7 +18,11 @@ bool PhysXSystem::initPhysX()
 	NxPhysicsSDKDesc SDKDesc;
 	SDKDesc.setToDefault();
 	if (mUseGPU)
+	{
 		SDKDesc.flags &= ~NX_SDKF_NO_HARDWARE;
+		SDKDesc.gpuHeapSize   = 64;
+		SDKDesc.meshCacheSize = 32;
+	}
 
 	NxSDKCreateError errorCode = NXCE_NO_ERROR;
 	mPhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, 0, 0, SDKDesc, &errorCode);

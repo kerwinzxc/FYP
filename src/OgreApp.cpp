@@ -1,9 +1,10 @@
 #include "OgreApp.h"
 
 OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
-                     mTerrianObj(NULL), mTreeObj(NULL), mLeafObj(NULL)
+                     mTerrianObj(NULL), mTreeObj(NULL), mLeafObj(NULL), mLastGPUState(true)
 {
 	mPhysXSys = new PhysXSystem();
+	mPhysXSys->initPhysX();
 }
 
 OgreApp::~OgreApp()
@@ -15,7 +16,6 @@ OgreApp::~OgreApp()
 		delete mTreeObj;
 	if (mLeafObj)
 		delete mLeafObj;
-	delete mPhysXSys;
 }
 
 bool OgreApp::configure()
@@ -55,10 +55,7 @@ void OgreApp::destroyScene()
 
 bool OgreApp::frameStarted(const FrameEvent& evt)
 {
-	if (evt.timeSinceLastFrame < 0.010f)
-		mPhysXSys->stepPhysX(0.010f);
-	else
-		mPhysXSys->stepPhysX(evt.timeSinceLastFrame);
+	mPhysXSys->stepPhysX(1.0f / 60.0f);
 	if (mTree)
 		mTree->render();
 	if (mLeaves.size() > 0)
@@ -90,10 +87,18 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 	if (arg.key == OIS::KC_C)
 	{
 		destroyScene();
-		if (mPhysXSys->getGPUuse())
+		mPhysXSys = new PhysXSystem();
+		if (mLastGPUState)
+		{
 			mPhysXSys->setGPUuse(false);
+			mLastGPUState = false;
+		}
 		else
+		{
 			mPhysXSys->setGPUuse(true);
+			mLastGPUState = true;
+		}
+		mPhysXSys->initPhysX();
 		createScene();
 	}
 	return BaseApplication::keyPressed(arg);
@@ -275,4 +280,5 @@ void OgreApp::clearPhysX()
 			delete *i;
 	if (mFluid)
 		delete mFluid;
+	delete mPhysXSys;
 }
