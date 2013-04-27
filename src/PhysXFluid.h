@@ -25,11 +25,9 @@ public:
 private:
 	void init(NxFluidDesc &desc);
 	NxVec3 RandNormalVec();
-	bool initFluid(NxFluidDesc &desc);
 	bool initFrameActor();
 	bool initFluidEmitter();
 	bool initFluidDrain();
-	void allocateReceiveBuffers(NxFluidDesc &desc);
 
 	void initParticleSystem(NxFluidDesc &desc);
 

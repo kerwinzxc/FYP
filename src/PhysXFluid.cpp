@@ -37,30 +37,6 @@ PhysXFluid::~PhysXFluid()
 
 void PhysXFluid::init(NxFluidDesc &desc)
 {
-	initFluid(desc);
-	allocateReceiveBuffers(desc);
-	mFluid = mScene->createFluid(desc);
-	initFrameActor();
-	initFluidEmitter();
-	initFluidDrain();
-	mInitDone = true;
-}
-
-NxVec3 PhysXFluid::RandNormalVec()
-{
-	NxReal x, y, z;
-	NxReal s = 0;
-
-	//choose direction, uniformly distributed.
-	x =  5.0f + NxMath::rand(-17.0f, 17.0f);
-	y = 20.0f + NxMath::rand(  0.0f, 15.0f);
-	z = 15.0f + NxMath::rand( -4.0f, 10.0f);
-
-	return NxVec3(x, y, z);
-}
-
-bool PhysXFluid::initFluid(NxFluidDesc &desc)
-{
 	ParticleSDK* particleSDK = new ParticleSDK[mInitParticles];
 	unsigned particleCount = 0;
 	while (particleCount < mInitParticles)
@@ -80,12 +56,33 @@ bool PhysXFluid::initFluid(NxFluidDesc &desc)
 	particleData.bufferLife           = &particleSDK[0].lifetime;
 	particleData.bufferLifeByteStride = sizeof(ParticleSDK);
 
-	if (particleData.checkValid() != 0)
-		return false;
-	else
-		desc.initialParticleData = particleData;
+	assert(particleData.checkValid() == 0);
 
-	return true;
+	desc.initialParticleData = particleData;
+	desc.particlesWriteData.bufferPos = &mPositions[0].x;
+	desc.particlesWriteData.bufferPosByteStride = sizeof(NxVec3);
+	desc.particlesWriteData.bufferVel = &mVelocities[0].x;
+	desc.particlesWriteData.bufferVelByteStride = sizeof(NxVec3);
+	desc.particlesWriteData.numParticlesPtr = &mNumOfParticles;
+
+	mFluid = mScene->createFluid(desc);
+	initFrameActor();
+	initFluidEmitter();
+	initFluidDrain();
+	mInitDone = true;
+}
+
+NxVec3 PhysXFluid::RandNormalVec()
+{
+	NxReal x, y, z;
+	NxReal s = 0;
+
+	//choose direction, uniformly distributed.
+	x =  5.0f + NxMath::rand(-17.0f, 17.0f);
+	y = 10.0f + NxMath::rand(  0.0f,  8.0f);
+	z = 15.0f + NxMath::rand( -4.0f, 10.0f);
+
+	return NxVec3(x, y, z);
 }
 
 bool PhysXFluid::initFrameActor()
@@ -109,7 +106,7 @@ bool PhysXFluid::initFrameActor()
 	NxMat33 m;
 	m.rotX(NxPi / 2);
 	mFrameActor->setGlobalOrientation(m);
-	mFrameActor->setGlobalPosition(NxVec3(5, 40, 10));
+	mFrameActor->setGlobalPosition(NxVec3(3.5, 40.0, 10.0));
 
 	return true;
 }
@@ -125,7 +122,7 @@ bool PhysXFluid::initFluidEmitter()
 	NxFluidEmitterDesc emitterDesc;
 	emitterDesc.setToDefault();
 	emitterDesc.frameShape             = mFrameActor->getShapes()[0];
-	emitterDesc.dimensionX             = 13.0f;
+	emitterDesc.dimensionX             = 14.0f;
 	emitterDesc.dimensionY             = 1.0f;
 	emitterDesc.relPose                = mat;
 	emitterDesc.rate                   = 500;
@@ -163,15 +160,6 @@ bool PhysXFluid::initFluidDrain()
 	mFluidDrain->setGlobalPosition(NxVec3(5, 12, 30));
 
 	return true;
-}
-
-void PhysXFluid::allocateReceiveBuffers(NxFluidDesc &desc)
-{
-	desc.particlesWriteData.bufferPos = &mPositions[0].x;
-	desc.particlesWriteData.bufferPosByteStride = sizeof(NxVec3);
-	desc.particlesWriteData.bufferVel = &mVelocities[0].x;
-	desc.particlesWriteData.bufferVelByteStride = sizeof(NxVec3);
-	desc.particlesWriteData.numParticlesPtr = &mNumOfParticles;
 }
 
 void PhysXFluid::initParticleSystem(NxFluidDesc &desc)
