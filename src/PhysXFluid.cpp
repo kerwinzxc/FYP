@@ -75,7 +75,6 @@ void PhysXFluid::init(NxFluidDesc &desc)
 NxVec3 PhysXFluid::RandNormalVec()
 {
 	NxReal x, y, z;
-	NxReal s = 0;
 
 	//choose direction, uniformly distributed.
 	x =  5.0f + NxMath::rand(-17.0f, 17.0f);
