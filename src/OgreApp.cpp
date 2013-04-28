@@ -127,12 +127,12 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 {
 	if (mTrayMgr->isDialogVisible()) return true;
 
-	if (arg.key == OIS::KC_C)
+	switch (arg.key)
 	{
+	case OIS::KC_C:
 		resetCamPos();
-	}
-	else if (arg.key == OIS::KC_H)
-	{
+		break;
+	case OIS::KC_H:
 		destroyScene();
 		mPhysXSys = new PhysXSystem();
 		if (mLastGPUState)
@@ -155,9 +155,8 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 			createLeaves();
 		if (mStatesPanel->getParamValue("(4) Fluid") == "On")
 			createFluid();
-	}
-	else if (arg.key == OIS::KC_1)
-	{
+		break;
+	case OIS::KC_1:
 		if (mWind)
 		{
 			mWind = false;
@@ -168,9 +167,8 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 			mWind = true;
 			mStatesPanel->setParamValue(2, "On");
 		}
-	}
-	else if (arg.key == OIS::KC_2)
-	{
+		break;
+	case OIS::KC_2:
 		if (mTree)
 		{
 			delete mTree;
@@ -182,9 +180,8 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 			createTree();
 			mStatesPanel->setParamValue(3, "On");
 		}
-	}
-	else if (arg.key == OIS::KC_3)
-	{
+		break;
+	case OIS::KC_3:
 		if (mLeaves.size() > 0)
 		{
 			for (size_t i = 0; i < mLeaves.size(); ++i)
@@ -197,9 +194,8 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 			createLeaves();
 			mStatesPanel->setParamValue(4, "On");
 		}
-	}
-	else if (arg.key == OIS::KC_4)
-	{
+		break;
+	case OIS::KC_4:
 		if (mFluid)
 		{
 			delete mFluid;
@@ -211,6 +207,7 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 			createFluid();
 			mStatesPanel->setParamValue(5, "On");
 		}
+		break;
 	}
 	return BaseApplication::keyPressed(arg);
 }
