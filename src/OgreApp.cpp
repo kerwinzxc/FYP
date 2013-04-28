@@ -46,12 +46,12 @@ void OgreApp::createFrameListener()
 	mTrayMgr->toggleAdvancedFrameStats();
 
 	StringVector labels;
-	labels.push_back("GPU");
+	labels.push_back("(H) GPU");
 	labels.push_back("");
-	labels.push_back("Wind");
-	labels.push_back("Tree");
-	labels.push_back("Leaves");
-	labels.push_back("Fluid");
+	labels.push_back("(1) Wind");
+	labels.push_back("(2) Tree");
+	labels.push_back("(3) Leaves");
+	labels.push_back("(4) Fluid");
 	mStatesPanel = mTrayMgr->createParamsPanel(TL_BOTTOMLEFT, "States", 150, labels);
 	mStatesPanel->setParamValue(0, "On");
 	mStatesPanel->setParamValue(2, "On");
@@ -150,11 +150,11 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 		mPhysXSys->initPhysX();
 		createTerrian();
 		createTreeBody();
-		if (mStatesPanel->getParamValue("Tree") == "On")
+		if (mStatesPanel->getParamValue("(2) Tree") == "On")
 			createTree();
-		if (mStatesPanel->getParamValue("Leaves") == "On")
+		if (mStatesPanel->getParamValue("(3) Leaves") == "On")
 			createLeaves();
-		if (mStatesPanel->getParamValue("Fluid") == "On")
+		if (mStatesPanel->getParamValue("(4) Fluid") == "On")
 			createFluid();
 	}
 	else if (arg.key == OIS::KC_1)
