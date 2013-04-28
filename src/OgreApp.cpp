@@ -103,10 +103,13 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 				delete mLeaves[i];
 				mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, mLeafObj, i);
 			}
-			if (mWind)
+			if (mWind && mTree)
 				mLeaves[i]->getNxCloth()->setWindAcceleration(
 				  mTree->getNxSoftBody()->getExternalAcceleration() + NxVec3(
-				  NxMath::rand(5.0f, 25.0f),NxMath::rand(9.8f, 10.0f),NxMath::rand(0.0f, 4.0f)));
+				  NxMath::rand(5.0f, 25.0f), NxMath::rand(9.8f, 10.0f), NxMath::rand(0.0f, 4.0f)));
+			else if (mWind)
+				mLeaves[i]->getNxCloth()->setWindAcceleration(NxVec3(
+				  NxMath::rand(5.0f, 25.0f), NxMath::rand(9.8f, 10.0f), NxMath::rand(0.0f, 4.0f)));
 			else
 				mLeaves[i]->getNxCloth()->setWindAcceleration(NxVec3(0.0f, 0.0f, 0.0f));
 			mLeaves[i]->render();
@@ -155,6 +158,20 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 		{
 			mWind = true;
 			mStatesPanel->setParamValue(2, "On");
+		}
+	}
+	else if (arg.key == OIS::KC_2)
+	{
+		if (mTree)
+		{
+			delete mTree;
+			mTree = NULL;
+			mStatesPanel->setParamValue(3, "Off");
+		}
+		else
+		{
+			createTree();
+			mStatesPanel->setParamValue(3, "On");
 		}
 	}
 	else if (arg.key == OIS::KC_4)
