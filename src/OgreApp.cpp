@@ -324,13 +324,13 @@ void OgreApp::createLeaves()
 
 	if (mLeafObj == NULL)
 	{
+		mLeaves.resize(mNumLeaves);
 		mLeafObj = new ObjMeshExt();
 		char* filepath = strdup(getFilePath("leaf.obj").c_str());
 		mLeafObj->loadFromObjFile(filepath);
 		free(filepath);
 	}
 
-	mLeaves.resize(mNumLeaves);
 	for (int i = 0; i < mNumLeaves; i++)
 	{
 		NxReal x = rand() % 30;
