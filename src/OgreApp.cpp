@@ -148,7 +148,14 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 			mLastGPUState = true;
 		}
 		mPhysXSys->initPhysX();
-		createScene();
+		createTerrian();
+		createTreeBody();
+		if (mStatesPanel->getParamValue("Tree") == "On")
+			createTree();
+		if (mStatesPanel->getParamValue("Leaves") == "On")
+			createLeaves();
+		if (mStatesPanel->getParamValue("Fluid") == "On")
+			createFluid();
 	}
 	else if (arg.key == OIS::KC_1)
 	{
