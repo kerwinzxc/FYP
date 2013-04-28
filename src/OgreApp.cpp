@@ -2,7 +2,7 @@
 
 OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
                      mTerrianObj(NULL), mTreeObj(NULL), mLeafObj(NULL),
-                     mLastGPUState(true), mWind(true)
+                     mLastGPUState(true), mWind(true), mStatesPanel(0)
 {
 	mPhysXSys = new PhysXSystem();
 	mPhysXSys->initPhysX();
@@ -39,6 +39,25 @@ void OgreApp::createCamera()
 	mCamera->lookAt(-50.0, 0.0, 20.0);
 }
 
+void OgreApp::createFrameListener()
+{
+	BaseApplication::createFrameListener();
+	mTrayMgr->hideLogo();
+	mTrayMgr->showFrameStats(TL_TOPLEFT);
+	mTrayMgr->toggleAdvancedFrameStats();
+
+	StringVector labels;
+	labels.push_back("GPU");
+	labels.push_back("");
+	labels.push_back("Wind");
+	labels.push_back("Tree");
+	labels.push_back("Leaves");
+	labels.push_back("Fluid");
+	mStatesPanel = mTrayMgr->createParamsPanel(TL_BOTTOMLEFT, "States", 150, labels);
+	mStatesPanel->setParamValue(0, "On");
+	mStatesPanel->setParamValue(2, "On");
+}
+
 void OgreApp::createScene()
 {
 	createTerrian();
@@ -55,7 +74,8 @@ void OgreApp::destroyScene()
 
 bool OgreApp::frameStarted(const FrameEvent& evt)
 {
-	mPhysXSys->stepPhysX(1.0f / 60.0f);
+	if (mPhysXSys)
+		mPhysXSys->stepPhysX(1.0f / 60.0f);
 	if (mTree)
 	{
 		if (mWind)
@@ -65,8 +85,10 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 		else
 			mTree->getNxSoftBody()->setExternalAcceleration(NxVec3(0.0f, 0.0f, 0.0f));
 		mTree->render();
+		mStatesPanel->setParamValue(3, "On");
 	}
 	if (mLeaves.size() > 0)
+	{
 		for (size_t i = 0; i < mLeaves.size(); ++i)
 		{
 			NxVec3 position = mLeaves[i]->getNxCloth()->getPosition(0);
@@ -89,8 +111,13 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 				mLeaves[i]->getNxCloth()->setWindAcceleration(NxVec3(0.0f, 0.0f, 0.0f));
 			mLeaves[i]->render();
 		}
+		mStatesPanel->setParamValue(4, "On");
+	}
 	if (mFluid)
+	{
 		mFluid->render();
+		mStatesPanel->setParamValue(5, "On");
+	}
 	return true;
 }
 
@@ -98,29 +125,51 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 {
 	if (mTrayMgr->isDialogVisible()) return true;
 
-	if (arg.key == OIS::KC_C)
+	if (arg.key == OIS::KC_H)
 	{
 		destroyScene();
 		mPhysXSys = new PhysXSystem();
 		if (mLastGPUState)
 		{
 			mPhysXSys->setGPUuse(false);
+			mStatesPanel->setParamValue(0, "Off");
 			mLastGPUState = false;
 		}
 		else
 		{
 			mPhysXSys->setGPUuse(true);
+			mStatesPanel->setParamValue(0, "On");
 			mLastGPUState = true;
 		}
 		mPhysXSys->initPhysX();
 		createScene();
 	}
-	else if (arg.key == OIS::KC_Q)
+	else if (arg.key == OIS::KC_1)
 	{
 		if (mWind)
+		{
 			mWind = false;
+			mStatesPanel->setParamValue(2, "Off");
+		}
 		else
+		{
 			mWind = true;
+			mStatesPanel->setParamValue(2, "On");
+		}
+	}
+	else if (arg.key == OIS::KC_4)
+	{
+		if (mFluid)
+		{
+			delete mFluid;
+			mFluid = NULL;
+			mStatesPanel->setParamValue(5, "Off");
+		}
+		else
+		{
+			createFluid();
+			mStatesPanel->setParamValue(5, "On");
+		}
 	}
 	return BaseApplication::keyPressed(arg);
 }

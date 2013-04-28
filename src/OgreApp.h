@@ -10,6 +10,7 @@
 #include "PhysXTriangleMesh.h"
 
 using namespace Ogre;
+using namespace OgreBites;
 
 class OgreApp : public BaseApplication
 {
@@ -20,10 +21,13 @@ public:
 protected:
 	virtual bool configure();
 	virtual void createCamera();
+	virtual void createFrameListener();
 	virtual void createScene();
 	virtual void destroyScene();
 	virtual bool frameStarted(const FrameEvent& evt);
 	virtual bool keyPressed(const OIS::KeyEvent &arg);
+
+	ParamsPanel* mStatesPanel;
 
 private:
 	String getFilePath(const String& filename);
