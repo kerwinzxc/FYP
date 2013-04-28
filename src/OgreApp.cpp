@@ -299,9 +299,6 @@ void OgreApp::createTreeBody()
 	for (size_t i = 0; i < capsuleInfos.size(); ++i)
 		mTreeBody[i] = new PhysXCapsule(mPhysXSys->getScene(), capsuleInfos[i]);
 	capsuleInfos.swap(std::vector<CapsuleInfo>());
-
-	if (mTree)
-		mTree->getNxSoftBody()->attachToCollidingShapes(0);
 }
 
 void OgreApp::createLeaves()
@@ -324,13 +321,13 @@ void OgreApp::createLeaves()
 
 	if (mLeafObj == NULL)
 	{
-		mLeaves.resize(mNumLeaves);
 		mLeafObj = new ObjMeshExt();
 		char* filepath = strdup(getFilePath("leaf.obj").c_str());
 		mLeafObj->loadFromObjFile(filepath);
 		free(filepath);
 	}
 
+	mLeaves.resize(mNumLeaves);
 	for (int i = 0; i < mNumLeaves; i++)
 	{
 		NxReal x = rand() % 30;

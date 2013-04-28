@@ -123,6 +123,7 @@ void PhysXSoftBody::init(NxSoftBodyDesc &desc, NxSoftBodyMeshDesc &meshDesc)
 	desc.softBodyMesh = mSoftBodyMesh;
 	desc.meshData = mReceiveBuffers;
 	mSoftBody = mScene->createSoftBody(desc);
+	mSoftBody->attachToCollidingShapes(0);
 
 	mInitDone = true;
 }
