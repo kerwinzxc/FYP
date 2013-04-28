@@ -78,7 +78,7 @@ NxVec3 PhysXFluid::RandNormalVec()
 
 	//choose direction, uniformly distributed.
 	x =  5.0f + NxMath::rand(-17.0f, 17.0f);
-	y = 10.0f + NxMath::rand(  0.0f,  8.0f);
+	y = 15.0f + NxMath::rand(  0.0f,  8.0f);
 	z = 15.0f + NxMath::rand( -4.0f, 10.0f);
 
 	return NxVec3(x, y, z);
@@ -148,7 +148,7 @@ bool PhysXFluid::initFluidDrain()
 
 	drainDesc.setToDefault();
 	drainDesc.shapeFlags |= NX_SF_FLUID_DRAIN;
-	drainDesc.dimensions.set(20.0f, 3.0f, 0.01f);
+	drainDesc.dimensions.set(20.0f, 1.0f, 0.01f);
 	drainActorDesc.shapes.pushBack(&drainDesc);
 
 	if (drainActorDesc.isValid())
@@ -156,7 +156,7 @@ bool PhysXFluid::initFluidDrain()
 	else
 		return false;
 
-	mFluidDrain->setGlobalPosition(NxVec3(5, 12, 30));
+	mFluidDrain->setGlobalPosition(NxVec3(5, 18, 30));
 
 	return true;
 }
@@ -170,7 +170,7 @@ void PhysXFluid::initParticleSystem(NxFluidDesc &desc)
 	mParticleSystem->setDefaultDimensions(1.0f, 1.0f);
 	mParticleSystem->setMaterialName("Examples/Water2");
 	mParticleSystem->setParticleQuota(desc.maxParticles);
-	mParticleSystem->setSpeedFactor(0.0f);
+	mParticleSystem->setSpeedFactor(0.001f);
 }
 
 void PhysXFluid::render()
@@ -178,7 +178,7 @@ void PhysXFluid::render()
 	if (mNumOfParticles > mParticleSystem->getNumParticles())
 	{
 		unsigned int newParticleCount = mNumOfParticles - mParticleSystem->getNumParticles();
-		for (unsigned int i=0;i < newParticleCount;i++)
+		for (unsigned int i = 0; i < newParticleCount; i++)
 		{
 			Ogre::Particle* particle = mParticleSystem->createParticle();
 			if (particle)
