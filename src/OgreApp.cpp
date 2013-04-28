@@ -177,6 +177,21 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 			mStatesPanel->setParamValue(3, "On");
 		}
 	}
+	else if (arg.key == OIS::KC_3)
+	{
+		if (mLeaves.size() > 0)
+		{
+			for (size_t i = 0; i < mLeaves.size(); ++i)
+				delete mLeaves[i];
+			mLeaves.clear();
+			mStatesPanel->setParamValue(4, "Off");
+		}
+		else
+		{
+			createLeaves();
+			mStatesPanel->setParamValue(4, "On");
+		}
+	}
 	else if (arg.key == OIS::KC_4)
 	{
 		if (mFluid)
