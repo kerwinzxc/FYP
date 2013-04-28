@@ -60,8 +60,8 @@ void OgreApp::createFrameListener()
 void OgreApp::createScene()
 {
 	createTerrian();
-	createTree();
 	createTreeBody();
+	createTree();
 	createLeaves();
 	createFluid();
 }
