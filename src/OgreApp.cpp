@@ -2,7 +2,7 @@
 
 OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
                      mTerrianObj(NULL), mTreeObj(NULL), mLeafObj(NULL),
-                     mLastGPUState(true), mWind(true), mStatesPanel(0)
+                     mLastGPUState(false), mWind(true), mStatesPanel(0)
 {
 	mPhysXSys = new PhysXSystem();
 	mPhysXSys->initPhysX();
@@ -53,7 +53,7 @@ void OgreApp::createFrameListener()
 	labels.push_back("(3) Leaves");
 	labels.push_back("(4) Fluid");
 	mStatesPanel = mTrayMgr->createParamsPanel(TL_BOTTOMLEFT, "States", 150, labels);
-	mStatesPanel->setParamValue(0, "On");
+	mStatesPanel->setParamValue(0, "Off");
 	mStatesPanel->setParamValue(2, "On");
 }
 
@@ -137,7 +137,6 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 		mPhysXSys = new PhysXSystem();
 		if (mLastGPUState)
 		{
-			mPhysXSys->setGPUuse(false);
 			mStatesPanel->setParamValue(0, "Off");
 			mLastGPUState = false;
 		}

@@ -4,7 +4,7 @@ PhysXSystem::PhysXSystem()
 	: mPhysicsSDK(NULL),
 	  mScene(NULL),
 	  mCookingInitialized(false),
-	  mUseGPU(true)
+	  mUseGPU(false)
 {
 }
 
