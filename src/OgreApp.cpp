@@ -35,8 +35,7 @@ bool OgreApp::configure()
 void OgreApp::createCamera()
 {
 	BaseApplication::createCamera();
-	mCamera->setPosition(70.0, 80.0, 350.0);
-	mCamera->lookAt(-50.0, 0.0, 20.0);
+	resetCamPos();
 }
 
 void OgreApp::createFrameListener()
@@ -128,7 +127,11 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 {
 	if (mTrayMgr->isDialogVisible()) return true;
 
-	if (arg.key == OIS::KC_H)
+	if (arg.key == OIS::KC_C)
+	{
+		resetCamPos();
+	}
+	else if (arg.key == OIS::KC_H)
 	{
 		destroyScene();
 		mPhysXSys = new PhysXSystem();
@@ -189,6 +192,12 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 		}
 	}
 	return BaseApplication::keyPressed(arg);
+}
+
+void OgreApp::resetCamPos()
+{
+	mCamera->setPosition(70.0, 80.0, 350.0);
+	mCamera->lookAt(-50.0, 0.0, 20.0);
 }
 
 String OgreApp::getFilePath(const String& filename)

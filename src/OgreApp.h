@@ -27,6 +27,8 @@ protected:
 	virtual bool frameStarted(const FrameEvent& evt);
 	virtual bool keyPressed(const OIS::KeyEvent &arg);
 
+	virtual void resetCamPos();
+
 	ParamsPanel* mStatesPanel;
 
 private:
