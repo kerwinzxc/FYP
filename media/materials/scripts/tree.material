@@ -7,7 +7,7 @@ material Vegetation_Blur7
 			ambient 0.32549 0.447059 0.070588 1
 			diffuse 0.32549 0.447059 0.070588 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
@@ -30,7 +30,7 @@ material Wood__Floor
 			ambient 0.607843 0.411765 0.239216 1
 			diffuse 0.607843 0.411765 0.239216 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{

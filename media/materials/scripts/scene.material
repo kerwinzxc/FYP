@@ -1,26 +1,3 @@
-material 2009Decal_black_on_white
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.760784 0.756863 0.756863 1
-			diffuse 0.760784 0.756863 0.756863 1
-			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
-
-			texture_unit
-			{
-				texture 2009Decal-black_on_white.PNG
-			}
-		}
-
-	}
-
-}
-
-
-
 material brist_cap
 {
 	technique
@@ -30,7 +7,7 @@ material brist_cap
 			ambient 0.407843 0.392157 0.376471 1
 			diffuse 0.407843 0.392157 0.376471 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
@@ -53,7 +30,7 @@ material Cladding_Siding_Tan
 			ambient 0.619608 0.266667 0.203922 1
 			diffuse 0.619608 0.266667 0.203922 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
@@ -159,7 +136,7 @@ material Groundcover_Sand_Raked
 			ambient 0.647059 0.619608 0.588235 1
 			diffuse 0.647059 0.619608 0.588235 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
@@ -182,7 +159,7 @@ material Material13
 			ambient 0.556863 0.533333 0.494118 1
 			diffuse 0.556863 0.533333 0.494118 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
@@ -205,7 +182,7 @@ material Material31
 			ambient 0.529412 0.513725 0.490196 1
 			diffuse 0.529412 0.513725 0.490196 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
@@ -228,7 +205,7 @@ material Roofing_Shingles_Asphalt
 			ambient 0.435294 0.403922 0.380392 1
 			diffuse 0.435294 0.403922 0.380392 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
@@ -251,7 +228,7 @@ material Sketchy_Stone_Ashlar1
 			ambient 0.658824 0.658824 0.658824 1
 			diffuse 0.658824 0.658824 0.658824 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
@@ -274,7 +251,7 @@ material Stone_Coursed_Rough
 			ambient 0.647059 0.627451 0.509804 1
 			diffuse 0.647059 0.627451 0.509804 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
@@ -297,7 +274,7 @@ material Stone_Flagstone_Ashlar
 			ambient 0.686275 0.454902 0.4 1
 			diffuse 0.686275 0.454902 0.4 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
@@ -320,7 +297,7 @@ material Stone_Marble
 			ambient 0.560784 0.541176 0.533333 1
 			diffuse 0.560784 0.541176 0.533333 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
@@ -343,7 +320,7 @@ material Stone_Vein_Gray1
 			ambient 0.65098 0.647059 0.647059 1
 			diffuse 0.65098 0.647059 0.647059 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
@@ -366,7 +343,7 @@ material Vegetation_Grass11
 			ambient 0.564706 0.627451 0.356863 1
 			diffuse 0.564706 0.627451 0.356863 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
@@ -389,7 +366,7 @@ material Wood_Bamboo_Medium
 			ambient 0.694118 0.411765 0.168627 1
 			diffuse 0.694118 0.411765 0.168627 1
 			specular 0.333333 0.333333 0.333333 1 1
-			scene_blend one one_minus_src_alpha
+			cull_hardware none
 
 			texture_unit
 			{
