@@ -130,7 +130,7 @@ bool PhysXFluid::initFluidEmitter()
 	emitterDesc.fluidVelocityMagnitude = 4.0f;
 	emitterDesc.repulsionCoefficient   = 0.9f;
 	emitterDesc.maxParticles           = 0;
-	emitterDesc.particleLifetime       = 2.0;
+	emitterDesc.particleLifetime       = 3.0;
 	emitterDesc.type                   = NX_FE_CONSTANT_FLOW_RATE;
 	emitterDesc.shape                  = NX_FE_ELLIPSE;
 
