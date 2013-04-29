@@ -2,7 +2,8 @@
 
 OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
                      mTerrianObj(NULL), mTreeObj(NULL), mLeafObj(NULL),
-                     mLastGPUState(false), mWind(true), mStatesPanel(0)
+                     mLastGPUState(false), mWind(false), mStatesPanel(0),
+                     mMouseDistance(0.0, 0.0, 0.0), mWindVector(0.0, 0.0, 0.0)
 {
 	mPhysXSys = new PhysXSystem();
 	mPhysXSys->initPhysX();
@@ -42,6 +43,7 @@ void OgreApp::createFrameListener()
 {
 	BaseApplication::createFrameListener();
 	mTrayMgr->hideLogo();
+	mTrayMgr->showCursor();
 	mTrayMgr->showFrameStats(TL_TOPLEFT);
 	mTrayMgr->toggleAdvancedFrameStats();
 
@@ -54,7 +56,7 @@ void OgreApp::createFrameListener()
 	labels.push_back("(4) Fluid");
 	mStatesPanel = mTrayMgr->createParamsPanel(TL_BOTTOMLEFT, "States", 150, labels);
 	mStatesPanel->setParamValue(0, "Off");
-	mStatesPanel->setParamValue(2, "On");
+	mStatesPanel->setParamValue(2, "Off");
 }
 
 void OgreApp::createScene()
@@ -77,12 +79,6 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 		mPhysXSys->stepPhysX(1.0f / 60.0f);
 	if (mTree)
 	{
-		if (mWind)
-			mTree->getNxSoftBody()->setExternalAcceleration(NxVec3(NxMath::rand( 0.0f, 1.0f),
-			                                                       NxMath::rand(-1.0f, 2.0f),
-			                                                       NxMath::rand(-1.0f, 2.0f)));
-		else
-			mTree->getNxSoftBody()->setExternalAcceleration(NxVec3(0.0f, 0.0f, 0.0f));
 		mTree->render();
 		mStatesPanel->setParamValue(3, "On");
 	}
@@ -102,15 +98,7 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 				delete mLeaves[i];
 				mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, mLeafObj, i);
 			}
-			if (mWind && mTree)
-				mLeaves[i]->getNxCloth()->setWindAcceleration(
-				  mTree->getNxSoftBody()->getExternalAcceleration() + NxVec3(
-				  NxMath::rand(5.0f, 25.0f), NxMath::rand(9.8f, 10.0f), NxMath::rand(0.0f, 4.0f)));
-			else if (mWind)
-				mLeaves[i]->getNxCloth()->setWindAcceleration(NxVec3(
-				  NxMath::rand(5.0f, 25.0f), NxMath::rand(9.8f, 10.0f), NxMath::rand(0.0f, 4.0f)));
-			else
-				mLeaves[i]->getNxCloth()->setWindAcceleration(NxVec3(0.0f, 0.0f, 0.0f));
+			mLeaves[i]->getNxCloth()->setWindAcceleration(mWindVector);
 			mLeaves[i]->render();
 		}
 		mStatesPanel->setParamValue(4, "On");
@@ -123,7 +111,7 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 	return true;
 }
 
-bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
+bool OgreApp::keyPressed(const KeyEvent &arg)
 {
 	if (mTrayMgr->isDialogVisible()) return true;
 
@@ -159,13 +147,9 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 	case OIS::KC_1:
 		if (mWind)
 		{
+			mWindVector = NxVec3(0.0, 0.0, 0.0);
 			mWind = false;
 			mStatesPanel->setParamValue(2, "Off");
-		}
-		else
-		{
-			mWind = true;
-			mStatesPanel->setParamValue(2, "On");
 		}
 		break;
 	case OIS::KC_2:
@@ -210,6 +194,55 @@ bool OgreApp::keyPressed(const OIS::KeyEvent &arg)
 		break;
 	}
 	return BaseApplication::keyPressed(arg);
+}
+
+bool OgreApp::mouseMoved(const MouseEvent &arg)
+{
+	if (arg.state.buttonDown(MB_Right))
+	{
+		mTrayMgr->hideCursor();
+		mCameraMan->injectMouseMove(arg);
+	}
+	else
+	{
+		if (mTrayMgr->injectMouseMove(arg)) return true;
+		if (arg.state.buttonDown(MB_Left))
+			mMouseDistance += NxVec3(arg.state.X.rel, arg.state.Y.rel, arg.state.Z.rel);
+	}
+	return true;
+}
+
+bool OgreApp::mousePressed(const MouseEvent &arg, MouseButtonID id)
+{
+	if (id == MB_Left)
+		mMouseDistance = NxVec3(0.0, 0.0, 0.0);
+	return BaseApplication::mousePressed(arg, id);
+}
+
+bool OgreApp::mouseReleased(const MouseEvent &arg, MouseButtonID id)
+{
+	if (id == MB_Left)
+	{
+		mMouseDistance += NxVec3(arg.state.X.rel, arg.state.Y.rel, arg.state.Z.rel);
+		Ogre::Vector3 result = mMouseDistance.x * mCamera->getRight() -
+		                       mMouseDistance.y * mCamera->getUp();
+		mWindVector = NxVec3(result.x, result.y, result.z) * 0.1;
+		if (mWindVector.x == 0.0 && mWindVector.y == 0.0 && mWindVector.z == 0.0)
+		{
+			mStatesPanel->setParamValue(2, "Off");
+			mWind = false;
+		}
+		else
+		{
+			mStatesPanel->setParamValue(2, "On");
+			mWind = true;
+		}
+	}
+	else if (id == MB_Right && !mTrayMgr->isCursorVisible())
+	{
+		mTrayMgr->showCursor();
+	}
+	return BaseApplication::mouseReleased(arg, id);
 }
 
 void OgreApp::resetCamPos()

@@ -9,6 +9,7 @@
 #include "PhysXSoftBody.h"
 #include "PhysXTriangleMesh.h"
 
+using namespace OIS;
 using namespace Ogre;
 using namespace OgreBites;
 
@@ -25,7 +26,10 @@ protected:
 	virtual void createScene();
 	virtual void destroyScene();
 	virtual bool frameStarted(const FrameEvent& evt);
-	virtual bool keyPressed(const OIS::KeyEvent &arg);
+	virtual bool keyPressed(const KeyEvent &arg);
+	virtual bool mouseMoved(const MouseEvent &arg);
+	virtual bool mousePressed(const MouseEvent &arg, MouseButtonID id);
+	virtual bool mouseReleased(const MouseEvent &arg, MouseButtonID id);
 
 	virtual void resetCamPos();
 
@@ -57,6 +61,9 @@ private:
 
 	bool mLastGPUState;
 	bool mWind;
+
+	NxVec3 mMouseDistance;
+	NxVec3 mWindVector;
 
 	static const int mNumLeaves = 50;
 };
