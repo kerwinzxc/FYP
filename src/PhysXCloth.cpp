@@ -162,7 +162,6 @@ void PhysXCloth::render()
 		mManualObj->position(pos);
 		Ogre::Vector3 nor = Ogre::Vector3(mNormals[i].x, mNormals[i].y, mNormals[i].z);
 		mManualObj->normal(nor);
-		mManualObj->colour(Ogre::ColourValue::Green);
 	}
 	for (NxU32 i = 0; i < mNumTriangles; i++)
 		mManualObj->triangle(mIndices[i * 3], mIndices[i * 3 + 1], mIndices[i * 3 + 2]);
