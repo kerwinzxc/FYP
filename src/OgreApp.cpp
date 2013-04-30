@@ -72,6 +72,7 @@ void OgreApp::createScene()
 void OgreApp::destroyScene()
 {
 	clearPhysX();
+	mSceneMgr->clearScene();
 }
 
 bool OgreApp::frameStarted(const FrameEvent& evt)
@@ -124,7 +125,7 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 		resetCamPos();
 		break;
 	case OIS::KC_H:
-		destroyScene();
+		clearPhysX();
 		mPhysXSys = new PhysXSystem();
 		if (mLastGPUState)
 		{
