@@ -98,7 +98,11 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 				delete mLeaves[i];
 				mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, mLeafObj, i);
 			}
-			mLeaves[i]->getNxCloth()->setWindAcceleration(mWindVector);
+			if (!mWindVector.isZero())
+			{
+				mLeaves[i]->getNxCloth()->wakeUp();
+				mLeaves[i]->getNxCloth()->setWindAcceleration(mWindVector * NxMath::rand(0.05f, 0.15f));
+			}
 			mLeaves[i]->render();
 		}
 		mStatesPanel->setParamValue(4, "On");
@@ -226,8 +230,8 @@ bool OgreApp::mouseReleased(const MouseEvent &arg, MouseButtonID id)
 		mMouseDistance += NxVec3(arg.state.X.rel, arg.state.Y.rel, arg.state.Z.rel);
 		Ogre::Vector3 result = mMouseDistance.x * mCamera->getRight() -
 		                       mMouseDistance.y * mCamera->getUp();
-		mWindVector = NxVec3(result.x, result.y, result.z) * 0.1;
-		if (mWindVector.x == 0.0 && mWindVector.y == 0.0 && mWindVector.z == 0.0)
+		mWindVector = NxVec3(result.x, result.y, result.z);
+		if (mWindVector.isZero())
 		{
 			mStatesPanel->setParamValue(2, "Off");
 			mWind = false;
