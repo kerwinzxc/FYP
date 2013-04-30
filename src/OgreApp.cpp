@@ -99,10 +99,8 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 				mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, mLeafObj, i);
 			}
 			if (!mWindVector.isZero())
-			{
 				mLeaves[i]->getNxCloth()->wakeUp();
-				mLeaves[i]->getNxCloth()->setWindAcceleration(mWindVector * NxMath::rand(0.05f, 0.15f));
-			}
+			mLeaves[i]->getNxCloth()->setWindAcceleration(mWindVector * NxMath::rand(0.05f, 0.15f));
 			mLeaves[i]->render();
 		}
 		mStatesPanel->setParamValue(4, "On");
