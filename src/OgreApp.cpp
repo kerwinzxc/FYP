@@ -61,6 +61,7 @@ void OgreApp::createFrameListener()
 
 void OgreApp::createScene()
 {
+	mSceneMgr->setSkyBox(true, "Examples/EarlyMorningSkyBox");
 	createTerrian();
 	createTreeBody();
 	createTree();
