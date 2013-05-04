@@ -124,7 +124,7 @@ void PhysXSoftBody::init(NxSoftBodyDesc &desc, NxSoftBodyMeshDesc &meshDesc)
 	desc.meshData = mReceiveBuffers;
 	mSoftBody = mScene->createSoftBody(desc);
 	mSoftBody->attachToCollidingShapes(0);
-
+	mSoftBody->setExternalAcceleration(NxVec3(5.0f, 0.0f, 0.0f));
 	mInitDone = true;
 }
 

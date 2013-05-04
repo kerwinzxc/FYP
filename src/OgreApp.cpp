@@ -299,7 +299,7 @@ void OgreApp::createTree()
 	softBodyDesc.friction                       = 1.0f;
 	softBodyDesc.collisionResponseCoefficient   = 0.9f;
 	softBodyDesc.solverIterations               = 1;
-	softBodyDesc.globalPose.t                   = NxVec3(-80.0, 0.2, 50.0);
+	softBodyDesc.globalPose.t                   = NxVec3(-80.0, 3.4, 50.0);
 
 	softBodyDesc.flags |= NX_SBF_COLLISION_TWOWAY;
 	if (mPhysXSys->getGPUuse())
