@@ -146,6 +146,9 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 
 	switch (arg.key)
 	{
+	case OIS::KC_F:
+		mTrayMgr->toggleAdvancedFrameStats();
+		break;
 	case OIS::KC_C:
 		resetCamPos();
 		break;
