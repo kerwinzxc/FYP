@@ -47,15 +47,18 @@ void OgreApp::createFrameListener()
 	mTrayMgr->showFrameStats(TL_TOPLEFT);
 	mTrayMgr->toggleAdvancedFrameStats();
 
+	mTrayMgr->destroyWidget(mDetailsPanel);
+
 	StringVector labels;
 	labels.push_back("(H) GPU");
-	labels.push_back("");
+	labels.push_back("(R) Poly Mode");
 	labels.push_back("(1) Wind");
 	labels.push_back("(2) Tree");
 	labels.push_back("(3) Leaves");
 	labels.push_back("(4) Fluid");
-	mStatesPanel = mTrayMgr->createParamsPanel(TL_BOTTOMLEFT, "States", 150, labels);
+	mStatesPanel = mTrayMgr->createParamsPanel(TL_BOTTOMLEFT, "States", 210, labels);
 	mStatesPanel->setParamValue(0, "Off");
+	mStatesPanel->setParamValue(1, "Solid");
 	mStatesPanel->setParamValue(2, "Off");
 }
 
@@ -115,6 +118,26 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 	return true;
 }
 
+bool OgreApp::frameRenderingQueued(const FrameEvent& evt)
+{
+	if(mWindow->isClosed())
+		return false;
+
+	if(mShutDown)
+		return false;
+
+	//Need to capture/update each device
+	mKeyboard->capture();
+	mMouse->capture();
+
+	mTrayMgr->frameRenderingQueued(evt);
+
+	if (!mTrayMgr->isDialogVisible())
+		mCameraMan->frameRenderingQueued(evt);   // if dialog isn't up, then update the camera
+
+	return true;
+}
+
 bool OgreApp::keyPressed(const KeyEvent &arg)
 {
 	if (mTrayMgr->isDialogVisible()) return true;
@@ -123,6 +146,23 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 	{
 	case OIS::KC_C:
 		resetCamPos();
+		break;
+	case OIS::KC_R:
+		switch (mCamera->getPolygonMode())
+		{
+		case Ogre::PM_SOLID:
+			mCamera->setPolygonMode(PM_WIREFRAME);
+			mStatesPanel->setParamValue(1, "Wireframe");
+			break;
+		case Ogre::PM_WIREFRAME:
+			mCamera->setPolygonMode(PM_POINTS);
+			mStatesPanel->setParamValue(1, "Points");
+			break;
+		default:
+			mCamera->setPolygonMode(PM_SOLID);
+			mStatesPanel->setParamValue(1, "Solid");
+			break;
+		}
 		break;
 	case OIS::KC_H:
 		clearPhysX();
@@ -196,8 +236,16 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 			mStatesPanel->setParamValue(5, "On");
 		}
 		break;
+	case OIS::KC_SYSRQ:
+		mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
+		break;
+	case OIS::KC_ESCAPE:
+		mShutDown = true;
+		break;
 	}
-	return BaseApplication::keyPressed(arg);
+
+	mCameraMan->injectKeyDown(arg);
+	return true;
 }
 
 bool OgreApp::mouseMoved(const MouseEvent &arg)

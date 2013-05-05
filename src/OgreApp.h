@@ -25,7 +25,10 @@ protected:
 	virtual void createFrameListener();
 	virtual void createScene();
 	virtual void destroyScene();
+
 	virtual bool frameStarted(const FrameEvent& evt);
+	virtual bool frameRenderingQueued(const FrameEvent& evt);
+
 	virtual bool keyPressed(const KeyEvent &arg);
 	virtual bool mouseMoved(const MouseEvent &arg);
 	virtual bool mousePressed(const MouseEvent &arg, MouseButtonID id);
