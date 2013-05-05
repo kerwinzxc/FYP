@@ -348,6 +348,7 @@ material Vegetation_Grass11
 			texture_unit
 			{
 				texture Vegetation_Grass11.PNG
+				scale 0.1 0.1
 			}
 		}
 
