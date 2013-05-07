@@ -37,19 +37,13 @@ bool PhysXTriangleMesh::saveMeshDesc(NxTriangleMeshDesc &desc, ObjMeshExt* objMe
 	if (vertexCount == 0)
 		return false;
 
-	NxVec3* verts = new NxVec3[vertexCount];
-	NxU32*  faces = new NxU32[triangleCount * 3];
-
 	if (mSceneMgr != NULL)
-	{
 		mManualObj = mSceneMgr->createManualObject(objMesh->getName());
-	}
 	else
-	{
-		delete[] verts;
-		delete[] faces;
 		return false;
-	}
+
+	NxVec3* verts = (NxVec3*)malloc(sizeof(NxVec3) * vertexCount);
+	NxU32*  faces = (NxU32*) malloc(sizeof(NxU32)  * triangleCount * 3);
 
 	mManualObj->estimateVertexCount(vertexCount);
 	mManualObj->estimateIndexCount(triangleCount * 3);

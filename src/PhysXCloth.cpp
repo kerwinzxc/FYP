@@ -49,8 +49,8 @@ bool PhysXCloth::saveMeshDesc(NxClothMeshDesc &desc, ObjMeshExt* objMesh)
 	if (vertexCount == 0)
 		return false;
 
-	NxVec3* verts = new NxVec3[vertexCount];
-	NxU32*  faces = new NxU32[mNumTriangles * 3];
+	NxVec3* verts = (NxVec3*)malloc(sizeof(NxVec3) * vertexCount);
+	NxU32*  faces = (NxU32*) malloc(sizeof(NxU32)  * mNumTriangles * 3);
 
 	for (int i = 0; i < vertexCount; i++)
 	{
