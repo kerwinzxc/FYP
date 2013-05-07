@@ -31,7 +31,7 @@ private:
 
 	void initParticleSystem(NxFluidDesc &desc);
 
-	static const int mInitParticles = 10000;
+	static const int msInitParticles = 10000;
 
 	bool mInitDone;
 

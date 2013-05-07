@@ -425,8 +425,8 @@ void OgreApp::createLeaves()
 		free(filepath);
 	}
 
-	mLeaves.resize(mNumLeaves);
-	for (int i = 0; i < mNumLeaves; i++)
+	mLeaves.resize(msNumLeaves);
+	for (int i = 0; i < msNumLeaves; i++)
 	{
 		NxReal x = rand() % 30;
 		NxReal y = rand() % 70 ;

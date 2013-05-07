@@ -37,9 +37,9 @@ PhysXFluid::~PhysXFluid()
 
 void PhysXFluid::init(NxFluidDesc &desc)
 {
-	ParticleSDK* particleSDK = new ParticleSDK[mInitParticles];
+	ParticleSDK* particleSDK = new ParticleSDK[msInitParticles];
 	unsigned particleCount = 0;
-	while (particleCount < mInitParticles)
+	while (particleCount < msInitParticles)
 	{
 		NxVec3 pos = RandNormalVec();
 		ParticleSDK& newParticle = particleSDK[particleCount++];
