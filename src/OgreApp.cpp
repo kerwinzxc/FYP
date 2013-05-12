@@ -135,7 +135,23 @@ bool OgreApp::frameRenderingQueued(const FrameEvent& evt)
 	mTrayMgr->frameRenderingQueued(evt);
 
 	if (!mTrayMgr->isDialogVisible())
+	{
+		Ogre::Vector3 position = mCamera->getPosition();
+		if (position.x < -80)
+			position.x = -80;
+		else if (position.x > 190)
+			position.x = 190;
+		if (position.y < 50)
+			position.y = 50;
+		else if (position.y > 150)
+			position.y = 150;
+		if (position.z < -20)
+			position.z = -20;
+		else if (position.z > 300)
+			position.z = 300;
+		mCamera->setPosition(position);
 		mCameraMan->frameRenderingQueued(evt);   // if dialog isn't up, then update the camera
+	}
 
 	return true;
 }
