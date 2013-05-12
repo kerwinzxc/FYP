@@ -70,7 +70,7 @@ private:
 	NxVec3 mMouseDistance;
 	NxVec3 mWindVector;
 
-	static const int msNumLeaves = 50;
+	int mNumLeaves;
 };
 
 #endif

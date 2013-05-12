@@ -2,7 +2,7 @@
 
 OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
                      mTerrianObj(NULL), mTreeObj(NULL), mLeafObj(NULL),
-                     mLastState(CPU), mWind(false), mStatesPanel(0),
+                     mLastState(CPU), mWind(false), mStatesPanel(0), mNumLeaves(100),
                      mMouseDistance(0.0, 0.0, 0.0), mWindVector(0.0, 0.0, 0.0)
 {
 	mPhysXSys = new PhysXSystem();
@@ -190,15 +190,18 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 		{
 		case CPU:
 			mPhysXSys->setGPUuse(true);
+			mNumLeaves = 50;
 			mStatesPanel->setParamValue(0, "On");
 			mLastState = GPU;
 			break;
 		case GPU:
 			mPhysXSys->setGPUuse(true);
+			mNumLeaves = 150;
 			mStatesPanel->setParamValue(0, "Optimized");
 			mLastState = OPTIMIZED;
 			break;
 		case OPTIMIZED:
+			mNumLeaves = 100;
 			mStatesPanel->setParamValue(0, "Off");
 			mLastState = CPU;
 			break;
@@ -440,8 +443,8 @@ void OgreApp::createLeaves()
 		free(filepath);
 	}
 
-	mLeaves.resize(msNumLeaves);
-	for (int i = 0; i < msNumLeaves; i++)
+	mLeaves.resize(mNumLeaves);
+	for (int i = 0; i < mNumLeaves; i++)
 	{
 		NxReal x = rand() % 30;
 		NxReal y = rand() % 70 ;
