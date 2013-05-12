@@ -62,7 +62,9 @@ private:
 	ObjMeshExt* mTreeObj;
 	ObjMeshExt* mLeafObj;
 
-	bool mLastGPUState;
+	static const enum msState {CPU, GPU, OPTIMIZED};
+
+	msState mLastState;
 	bool mWind;
 
 	NxVec3 mMouseDistance;

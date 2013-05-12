@@ -2,7 +2,7 @@
 
 OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
                      mTerrianObj(NULL), mTreeObj(NULL), mLeafObj(NULL),
-                     mLastGPUState(false), mWind(false), mStatesPanel(0),
+                     mLastState(CPU), mWind(false), mStatesPanel(0),
                      mMouseDistance(0.0, 0.0, 0.0), mWindVector(0.0, 0.0, 0.0)
 {
 	mPhysXSys = new PhysXSystem();
@@ -186,16 +186,22 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 	case OIS::KC_H:
 		clearPhysX();
 		mPhysXSys = new PhysXSystem();
-		if (mLastGPUState)
+		switch (mLastState)
 		{
-			mStatesPanel->setParamValue(0, "Off");
-			mLastGPUState = false;
-		}
-		else
-		{
+		case CPU:
 			mPhysXSys->setGPUuse(true);
 			mStatesPanel->setParamValue(0, "On");
-			mLastGPUState = true;
+			mLastState = GPU;
+			break;
+		case GPU:
+			mPhysXSys->setGPUuse(true);
+			mStatesPanel->setParamValue(0, "Optimized");
+			mLastState = OPTIMIZED;
+			break;
+		case OPTIMIZED:
+			mStatesPanel->setParamValue(0, "Off");
+			mLastState = CPU;
+			break;
 		}
 		mPhysXSys->initPhysX();
 		createTerrian();
@@ -369,7 +375,7 @@ void OgreApp::createTree()
 	softBodyDesc.globalPose.t                   = NxVec3(-80.0, 3.4, 50.0);
 
 	softBodyDesc.flags |= NX_SBF_COLLISION_TWOWAY;
-	if (mPhysXSys->getGPUuse())
+	if (mLastState == GPU)
 		softBodyDesc.flags |= NX_SBF_HARDWARE;
 
 	if (mTreeObj == NULL)
@@ -423,7 +429,7 @@ void OgreApp::createLeaves()
 	mLeafDesc.flags |= NX_CLF_COMDAMPING;
 	mLeafDesc.flags |= NX_CLF_COLLISION_TWOWAY;
 	mLeafDesc.flags |= NX_CLF_VISUALIZATION;
-	if (mPhysXSys->getGPUuse())
+	if (mLastState == GPU)
 		mLeafDesc.flags |= NX_CLF_HARDWARE;
 
 	if (mLeafObj == NULL)
@@ -469,7 +475,7 @@ void OgreApp::createFluid()
 	fluidDesc.simulationMethod                = NX_F_SPH;
 
 	fluidDesc.flags |= NX_FF_PRIORITY_MODE;
-	if (!mPhysXSys->getGPUuse())
+	if (mLastState == CPU)
 		fluidDesc.flags &= ~NX_FF_HARDWARE;
 
 	mFluid = new PhysXFluid(mPhysXSys->getScene(), mSceneMgr, fluidDesc);
