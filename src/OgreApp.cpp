@@ -256,18 +256,6 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 			mStatesPanel->setParamValue(5, "On");
 		}
 		break;
-	case OIS::KC_T:
-		if (mWind)
-		{
-			mWind = false;
-			mStatesPanel->setParamValue(6, "Fluid");
-		}
-		else
-		{
-			mWind = true;
-			mStatesPanel->setParamValue(6, "Wind");
-		}
-		break;
 	case OIS::KC_SYSRQ:
 		mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
 		break;
