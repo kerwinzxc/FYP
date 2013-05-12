@@ -65,7 +65,6 @@ private:
 	static const enum msState {CPU, GPU, OPTIMIZED};
 
 	msState mLastState;
-	bool mWind;
 
 	NxVec3 mMouseDistance;
 	NxVec3 mWindVector;

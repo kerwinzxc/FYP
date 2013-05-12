@@ -2,7 +2,7 @@
 
 OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
                      mTerrianObj(NULL), mTreeObj(NULL), mLeafObj(NULL),
-                     mLastState(CPU), mWind(false), mStatesPanel(0), mNumLeaves(100),
+                     mLastState(CPU), mStatesPanel(0), mNumLeaves(100),
                      mMouseDistance(0.0, 0.0, 0.0), mWindVector(0.0, 0.0, 0.0)
 {
 	mPhysXSys = new PhysXSystem();
@@ -217,10 +217,9 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 			createFluid();
 		break;
 	case OIS::KC_1:
-		if (mWind)
+		if (!mWindVector.isZero())
 		{
 			mWindVector = NxVec3(0.0, 0.0, 0.0);
-			mWind = false;
 			mStatesPanel->setParamValue(2, "Off");
 		}
 		break;
@@ -308,15 +307,9 @@ bool OgreApp::mouseReleased(const MouseEvent &arg, MouseButtonID id)
 		                       mMouseDistance.y * mCamera->getUp();
 		mWindVector = NxVec3(result.x, result.y, result.z);
 		if (mWindVector.isZero())
-		{
 			mStatesPanel->setParamValue(2, "Off");
-			mWind = false;
-		}
 		else
-		{
 			mStatesPanel->setParamValue(2, "On");
-			mWind = true;
-		}
 	}
 	else if (id == MB_Right && !mTrayMgr->isCursorVisible())
 	{
