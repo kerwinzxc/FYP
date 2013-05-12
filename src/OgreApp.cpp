@@ -2,7 +2,7 @@
 
 OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
                      mTerrianObj(NULL), mTreeObj(NULL), mLeafObj(NULL),
-                     mLastGPUState(false), mWind(true), mStatesPanel(0),
+                     mLastGPUState(false), mWind(false), mStatesPanel(0),
                      mMouseDistance(0.0, 0.0, 0.0), mWindVector(0.0, 0.0, 0.0)
 {
 	mPhysXSys = new PhysXSystem();
@@ -56,12 +56,10 @@ void OgreApp::createFrameListener()
 	labels.push_back("(2) Tree");
 	labels.push_back("(3) Leaves");
 	labels.push_back("(4) Fluid");
-	labels.push_back("(T) Mouse Mode");
 	mStatesPanel = mTrayMgr->createParamsPanel(TL_BOTTOMLEFT, "States", 210, labels);
 	mStatesPanel->setParamValue(0, "Off");
 	mStatesPanel->setParamValue(1, "Solid");
 	mStatesPanel->setParamValue(2, "Off");
-	mStatesPanel->setParamValue(6, "Wind");
 }
 
 void OgreApp::createScene()
@@ -210,9 +208,10 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 			createFluid();
 		break;
 	case OIS::KC_1:
-		if (!mWindVector.isZero())
+		if (mWind)
 		{
 			mWindVector = NxVec3(0.0, 0.0, 0.0);
+			mWind = false;
 			mStatesPanel->setParamValue(2, "Off");
 		}
 		break;
@@ -278,7 +277,7 @@ bool OgreApp::mouseMoved(const MouseEvent &arg)
 	else
 	{
 		if (mTrayMgr->injectMouseMove(arg)) return true;
-		if (arg.state.buttonDown(MB_Left) && mWind)
+		if (arg.state.buttonDown(MB_Left))
 			mMouseDistance += NxVec3(arg.state.X.rel, arg.state.Y.rel, arg.state.Z.rel);
 	}
 	return true;
@@ -286,23 +285,29 @@ bool OgreApp::mouseMoved(const MouseEvent &arg)
 
 bool OgreApp::mousePressed(const MouseEvent &arg, MouseButtonID id)
 {
-	if (id == MB_Left && mWind)
+	if (id == MB_Left)
 		mMouseDistance = NxVec3(0.0, 0.0, 0.0);
 	return BaseApplication::mousePressed(arg, id);
 }
 
 bool OgreApp::mouseReleased(const MouseEvent &arg, MouseButtonID id)
 {
-	if (id == MB_Left && mWind)
+	if (id == MB_Left)
 	{
 		mMouseDistance += NxVec3(arg.state.X.rel, arg.state.Y.rel, arg.state.Z.rel);
 		Ogre::Vector3 result = mMouseDistance.x * mCamera->getRight() -
 		                       mMouseDistance.y * mCamera->getUp();
 		mWindVector = NxVec3(result.x, result.y, result.z);
 		if (mWindVector.isZero())
+		{
 			mStatesPanel->setParamValue(2, "Off");
+			mWind = false;
+		}
 		else
+		{
 			mStatesPanel->setParamValue(2, "On");
+			mWind = true;
+		}
 	}
 	else if (id == MB_Right && !mTrayMgr->isCursorVisible())
 	{
