@@ -282,7 +282,8 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 		}
 		break;
 	case OIS::KC_ADD:
-		if (mLastState != GPU && mNumLeaves < 400)
+		if ((mLastState != GPU && mNumLeaves < 400) ||
+		    (mLastState == GPU && mNumLeaves < 50))
 		{
 			mNumLeaves += 10;
 			mStatesPanel->setParamValue(6, StringConverter::toString(mNumLeaves));
