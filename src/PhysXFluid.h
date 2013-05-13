@@ -20,6 +20,7 @@ public:
 	~PhysXFluid();
 
 	NxFluid* getNxFluid() {return mFluid;}
+	Ogre::SceneNode* getSceneNode() {return mFluidNode;}
 	void render();
 
 private:

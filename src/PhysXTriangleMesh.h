@@ -11,6 +11,7 @@ public:
 	~PhysXTriangleMesh();
 
 	NxActor* getNxActor() {return mActor;}
+	Ogre::SceneNode* getSceneNode() {return mTriangleNode;}
 
 private:
 	bool saveMeshDesc(NxTriangleMeshDesc &desc, ObjMeshExt* objMesh);

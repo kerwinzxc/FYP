@@ -11,6 +11,7 @@ public:
 	~PhysXSoftBody();
 
 	NxSoftBody* getNxSoftBody() {return mSoftBody;}
+	Ogre::SceneNode* getSceneNode() {return mSoftBodyNode;}
 	void render();
 
 private:
