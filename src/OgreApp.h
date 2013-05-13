@@ -36,7 +36,14 @@ protected:
 
 	virtual void resetCamPos();
 
+	SceneNode* mCameraNode;
+	SceneNode* mHelperNode;
+
 	ParamsPanel* mStatesPanel;
+
+	AnimationState* mTerrainAnimState;
+	AnimationState* mTreeAnimState;
+	AnimationState* mFluidAnimState;
 
 private:
 	String getFilePath(const String& filename);

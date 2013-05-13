@@ -3,7 +3,8 @@
 OgreApp::OgreApp() : mTerrain(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
                      mTerrainObj(NULL), mTreeObj(NULL), mLeafObj(NULL),
                      mLastState(CPU), mStatesPanel(0), mNumLeaves(100),
-                     mMouseDistance(0.0, 0.0, 0.0), mWindVector(0.0, 0.0, 0.0)
+                     mMouseDistance(0.0, 0.0, 0.0), mWindVector(0.0, 0.0, 0.0),
+                     mTerrainAnimState(NULL), mTreeAnimState(NULL), mFluidAnimState(NULL)
 {
 	mPhysXSys = new PhysXSystem();
 	mPhysXSys->initPhysX();
@@ -57,11 +58,13 @@ void OgreApp::createFrameListener()
 	labels.push_back("(3) Leaves");
 	labels.push_back("(4) Fluid");
 	labels.push_back("(+/-) Max Leaves");
+	labels.push_back("Animation");
 	mStatesPanel = mTrayMgr->createParamsPanel(TL_BOTTOMLEFT, "States", 210, labels);
 	mStatesPanel->setParamValue(0, "Off");
 	mStatesPanel->setParamValue(1, "Solid");
 	mStatesPanel->setParamValue(2, "Off");
 	mStatesPanel->setParamValue(6, StringConverter::toString(mNumLeaves));
+	mStatesPanel->setParamValue(7, "None");
 }
 
 void OgreApp::createScene()
@@ -72,6 +75,40 @@ void OgreApp::createScene()
 	createTree();
 	createLeaves();
 	createFluid();
+
+	mCameraNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+	mHelperNode = mSceneMgr->getRootSceneNode()->createChildSceneNode(Ogre::Vector3(-80.0, 50.0, 50.0));
+	mCameraNode->attachObject(mCamera);
+
+	Animation* terrainAnim = mSceneMgr->createAnimation("TerrainCameraTrack", 20);
+	terrainAnim->setInterpolationMode(Animation::IM_SPLINE);
+	NodeAnimationTrack* terrainTrack = terrainAnim->createNodeTrack(0, mCameraNode);
+	terrainTrack->createNodeKeyFrame( 0)->setTranslate(Ogre::Vector3( 300, 0,    0));
+	terrainTrack->createNodeKeyFrame( 5)->setTranslate(Ogre::Vector3(   0, 0,  300));
+	terrainTrack->createNodeKeyFrame(10)->setTranslate(Ogre::Vector3(-300, 0,    0));
+	terrainTrack->createNodeKeyFrame(15)->setTranslate(Ogre::Vector3(   0, 0, -300));
+	terrainTrack->createNodeKeyFrame(20)->setTranslate(Ogre::Vector3( 300, 0,    0));
+	mTerrainAnimState = mSceneMgr->createAnimationState("TerrainCameraTrack");
+
+	Animation* treeAnim = mSceneMgr->createAnimation("TreeCameraTrack", 20);
+	treeAnim->setInterpolationMode(Animation::IM_SPLINE);
+	NodeAnimationTrack* treeTrack = treeAnim->createNodeTrack(0, mCameraNode);
+	treeTrack->createNodeKeyFrame( 0)->setTranslate(Ogre::Vector3( 105, 10,    0));
+	treeTrack->createNodeKeyFrame( 5)->setTranslate(Ogre::Vector3(   0,  0,  105));
+	treeTrack->createNodeKeyFrame(10)->setTranslate(Ogre::Vector3(-105,  0,    0));
+	treeTrack->createNodeKeyFrame(15)->setTranslate(Ogre::Vector3(   0, 10, -105));
+	treeTrack->createNodeKeyFrame(20)->setTranslate(Ogre::Vector3( 105, 10,    0));
+	mTreeAnimState = mSceneMgr->createAnimationState("TreeCameraTrack");
+
+	Animation* fluidAnim = mSceneMgr->createAnimation("FluidCameraTrack", 20);
+	fluidAnim->setInterpolationMode(Animation::IM_SPLINE);
+	NodeAnimationTrack* fluidTrack = fluidAnim->createNodeTrack(0, mCameraNode);
+	fluidTrack->createNodeKeyFrame( 0)->setTranslate(Ogre::Vector3( 100, 0,    0));
+	fluidTrack->createNodeKeyFrame( 5)->setTranslate(Ogre::Vector3(   0, 0,  100));
+	fluidTrack->createNodeKeyFrame(10)->setTranslate(Ogre::Vector3(-100, 0,    0));
+	fluidTrack->createNodeKeyFrame(15)->setTranslate(Ogre::Vector3(   0, 0, -100));
+	fluidTrack->createNodeKeyFrame(20)->setTranslate(Ogre::Vector3( 100, 0,    0));
+	mFluidAnimState = mSceneMgr->createAnimationState("FluidCameraTrack");
 }
 
 void OgreApp::destroyScene()
@@ -162,6 +199,13 @@ bool OgreApp::frameRenderingQueued(const FrameEvent& evt)
 		mCamera->setPosition(position);
 		mCameraMan->frameRenderingQueued(evt);   // if dialog isn't up, then update the camera
 	}
+
+	if (mTerrainAnimState->getEnabled())
+		mTerrainAnimState->addTime(evt.timeSinceLastFrame);
+	else if (mTreeAnimState->getEnabled())
+		mTreeAnimState->addTime(evt.timeSinceLastFrame);
+	else if (mFluidAnimState->getEnabled())
+		mFluidAnimState->addTime(evt.timeSinceLastFrame);
 
 	return true;
 }
@@ -277,6 +321,54 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 			createFluid();
 			mStatesPanel->setParamValue(5, "On");
 		}
+		break;
+	case OIS::KC_5:
+		if (mTreeAnimState->getEnabled())
+			mTreeAnimState->setEnabled(false);
+		else if (mFluidAnimState->getEnabled())
+			mFluidAnimState->setEnabled(false);
+		else
+			mCameraMan->setStyle(CS_MANUAL);
+		mCamera->setAutoTracking(true, mTerrain->getSceneNode());
+		mCamera->setPosition(Ogre::Vector3(0.0, 0.0, 200.0));
+		mTerrainAnimState->setEnabled(true);
+		mStatesPanel->setParamValue(7, "Terrain");
+		break;
+	case OIS::KC_6:
+		if (mTerrainAnimState->getEnabled())
+			mTerrainAnimState->setEnabled(false);
+		else if (mFluidAnimState->getEnabled())
+			mFluidAnimState->setEnabled(false);
+		else
+			mCameraMan->setStyle(CS_MANUAL);
+		mCamera->setAutoTracking(true, mHelperNode);
+		mCamera->setPosition(Ogre::Vector3(-80.0, 0.0, 50.0));
+		mTreeAnimState->setEnabled(true);
+		mStatesPanel->setParamValue(7, "Tree");
+		break;
+	case OIS::KC_7:
+		if (mTerrainAnimState->getEnabled())
+			mTerrainAnimState->setEnabled(false);
+		else if (mTreeAnimState->getEnabled())
+			mTreeAnimState->setEnabled(false);
+		else
+			mCameraMan->setStyle(CS_MANUAL);
+		mCamera->setAutoTracking(true, mFluid->getSceneNode());
+		mCamera->setPosition(Ogre::Vector3(3.5, 0.0, 10.0));
+		mFluidAnimState->setEnabled(true);
+		mStatesPanel->setParamValue(7, "Fluid");
+		break;
+	case OIS::KC_8:
+		if (mTerrainAnimState->getEnabled())
+			mTerrainAnimState->setEnabled(false);
+		else if (mTreeAnimState->getEnabled())
+			mTreeAnimState->setEnabled(false);
+		else if (mFluidAnimState->getEnabled())
+			mFluidAnimState->setEnabled(false);
+		mCameraNode->setPosition(0.0, 0.0, 0.0);
+		resetCamPos();
+		mCameraMan->setStyle(CS_FREELOOK);
+		mStatesPanel->setParamValue(7, "None");
 		break;
 	case OIS::KC_ADD:
 		if ((mLastState != GPU && mNumLeaves < 400) ||
