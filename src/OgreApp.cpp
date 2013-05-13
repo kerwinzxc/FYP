@@ -111,11 +111,8 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 			         0.0 < position.y && position.y < 120.0 &&
 			         0.0 < position.z && position.z < 150.0))
 			{
-				NxReal x = rand() % 30;
-				NxReal y = rand() % 70;
-				NxReal z = rand() % 50;
-				mLeafDesc.globalPose.t = NxVec3(-90.0 + x, 20.0 + y, 30.0 + z);
 				delete mLeaves[i];
+				mLeafDesc.globalPose.t = getLeafPosition();
 				mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, mLeafObj, i);
 			}
 			if (!mWindVector.isZero())
