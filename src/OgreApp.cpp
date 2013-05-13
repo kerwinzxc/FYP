@@ -98,7 +98,10 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 			size_t i = mLeaves.size();
 			mLeaves.resize(mNumLeaves);
 			for (; i < mNumLeaves; ++i)
+			{
+				mLeafDesc.globalPose.t = getLeafPosition();
 				mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, mLeafObj, i);
+			}
 		}
 
 		for (size_t i = 0; i < mLeaves.size(); ++i)
@@ -468,10 +471,7 @@ void OgreApp::createLeaves()
 	mLeaves.resize(mNumLeaves);
 	for (int i = 0; i < mNumLeaves; i++)
 	{
-		NxReal x = rand() % 30;
-		NxReal y = rand() % 70 ;
-		NxReal z = rand() % 50;
-		mLeafDesc.globalPose.t = NxVec3(-90.0 + x, 20.0 + y, 30.0 + z);
+		mLeafDesc.globalPose.t = getLeafPosition();
 		mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, mLeafObj, i);
 	}
 }

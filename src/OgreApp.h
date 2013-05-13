@@ -40,6 +40,7 @@ protected:
 
 private:
 	String getFilePath(const String& filename);
+	NxVec3 getLeafPosition() {return NxVec3(-90.0 + rand() % 30, 20.0 + rand() % 70, 30.0 + rand() % 50);}
 
 	void createTerrian();
 	void createTree();
