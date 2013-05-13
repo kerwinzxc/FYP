@@ -56,10 +56,12 @@ void OgreApp::createFrameListener()
 	labels.push_back("(2) Tree");
 	labels.push_back("(3) Leaves");
 	labels.push_back("(4) Fluid");
+	labels.push_back("(+/-) Max Leaves");
 	mStatesPanel = mTrayMgr->createParamsPanel(TL_BOTTOMLEFT, "States", 210, labels);
 	mStatesPanel->setParamValue(0, "Off");
 	mStatesPanel->setParamValue(1, "Solid");
 	mStatesPanel->setParamValue(2, "Off");
+	mStatesPanel->setParamValue(6, StringConverter::toString(mNumLeaves));
 }
 
 void OgreApp::createScene()
@@ -89,6 +91,16 @@ bool OgreApp::frameStarted(const FrameEvent& evt)
 	}
 	if (mLeaves.size() > 0)
 	{
+		if (mLeaves.size() != mNumLeaves)
+		{
+			for (int i = mNumLeaves; i < mLeaves.size(); i++)
+				delete mLeaves[i];
+			size_t i = mLeaves.size();
+			mLeaves.resize(mNumLeaves);
+			for (; i < mNumLeaves; ++i)
+				mLeaves[i] = new PhysXCloth(mPhysXSys->getScene(), mSceneMgr, mLeafDesc, mLeafObj, i);
+		}
+
 		for (size_t i = 0; i < mLeaves.size(); ++i)
 		{
 			NxVec3 position = mLeaves[i]->getNxCloth()->getPosition(0);
@@ -192,17 +204,20 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 			mPhysXSys->setGPUuse(true);
 			mNumLeaves = 50;
 			mStatesPanel->setParamValue(0, "On");
+			mStatesPanel->setParamValue(6, StringConverter::toString(mNumLeaves));
 			mLastState = GPU;
 			break;
 		case GPU:
 			mPhysXSys->setGPUuse(true);
 			mNumLeaves = 150;
 			mStatesPanel->setParamValue(0, "Optimized");
+			mStatesPanel->setParamValue(6, StringConverter::toString(mNumLeaves));
 			mLastState = OPTIMIZED;
 			break;
 		case OPTIMIZED:
 			mNumLeaves = 100;
 			mStatesPanel->setParamValue(0, "Off");
+			mStatesPanel->setParamValue(6, StringConverter::toString(mNumLeaves));
 			mLastState = CPU;
 			break;
 		}
@@ -261,6 +276,20 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 		{
 			createFluid();
 			mStatesPanel->setParamValue(5, "On");
+		}
+		break;
+	case OIS::KC_ADD:
+		if (mLastState != GPU && mNumLeaves < 400)
+		{
+			mNumLeaves += 10;
+			mStatesPanel->setParamValue(6, StringConverter::toString(mNumLeaves));
+		}
+		break;
+	case OIS::KC_SUBTRACT:
+		if (mNumLeaves > 10)
+		{
+			mNumLeaves -= 10;
+			mStatesPanel->setParamValue(6, StringConverter::toString(mNumLeaves));
 		}
 		break;
 	case OIS::KC_SYSRQ:
