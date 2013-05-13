@@ -1,7 +1,7 @@
 #include "OgreApp.h"
 
-OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
-                     mTerrianObj(NULL), mTreeObj(NULL), mLeafObj(NULL),
+OgreApp::OgreApp() : mTerrain(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
+                     mTerrainObj(NULL), mTreeObj(NULL), mLeafObj(NULL),
                      mLastState(CPU), mStatesPanel(0), mNumLeaves(100),
                      mMouseDistance(0.0, 0.0, 0.0), mWindVector(0.0, 0.0, 0.0)
 {
@@ -12,8 +12,8 @@ OgreApp::OgreApp() : mTerrian(NULL), mTree(NULL), mTreeBody(0), mFluid(NULL),
 OgreApp::~OgreApp()
 {
 	mSceneMgr->destroyAllCameras();
-	if (mTerrianObj)
-		delete mTerrianObj;
+	if (mTerrainObj)
+		delete mTerrainObj;
 	if (mTreeObj)
 		delete mTreeObj;
 	if (mLeafObj)
@@ -67,7 +67,7 @@ void OgreApp::createFrameListener()
 void OgreApp::createScene()
 {
 	mSceneMgr->setSkyBox(true, "Examples/EarlyMorningSkyBox");
-	createTerrian();
+	createTerrain();
 	createTreeBody();
 	createTree();
 	createLeaves();
@@ -222,7 +222,7 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 			break;
 		}
 		mPhysXSys->initPhysX();
-		createTerrian();
+		createTerrain();
 		createTreeBody();
 		if (mStatesPanel->getParamValue("(2) Tree") == "On")
 			createTree();
@@ -369,22 +369,22 @@ String OgreApp::getFilePath(const String& filename)
 	return filepath;
 }
 
-void OgreApp::createTerrian()
+void OgreApp::createTerrain()
 {
 	NxTriangleMeshShapeDesc terrainShapeDesc;
 	terrainShapeDesc.setToDefault();
 	terrainShapeDesc.shapeFlags = NX_SF_FEATURE_INDICES;
 
-	if (mTerrianObj == NULL)
+	if (mTerrainObj == NULL)
 	{
-		mTerrianObj = new ObjMeshExt();
+		mTerrainObj = new ObjMeshExt();
 		char* filepath = strdup(getFilePath("scene.obj").c_str());
-		mTerrianObj->loadFromObjFile(filepath);
+		mTerrainObj->loadFromObjFile(filepath);
 		free(filepath);
 	}
 
-	mTerrian = new PhysXTriangleMesh(mPhysXSys->getScene(), mSceneMgr, terrainShapeDesc,
-	                                 mTerrianObj);
+	mTerrain = new PhysXTriangleMesh(mPhysXSys->getScene(), mSceneMgr, terrainShapeDesc,
+	                                 mTerrainObj);
 }
 
 void OgreApp::createTree()
@@ -506,8 +506,8 @@ void OgreApp::createFluid()
 
 void OgreApp::clearPhysX()
 {
-	if (mTerrian)
-		delete mTerrian;
+	if (mTerrain)
+		delete mTerrain;
 	if (mTree)
 		delete mTree;
 	if (mTreeBody.size() > 0)

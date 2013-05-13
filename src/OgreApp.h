@@ -42,7 +42,7 @@ private:
 	String getFilePath(const String& filename);
 	NxVec3 getLeafPosition() {return NxVec3(-90.0 + rand() % 30, 20.0 + rand() % 70, 30.0 + rand() % 50);}
 
-	void createTerrian();
+	void createTerrain();
 	void createTree();
 	void createTreeBody();
 	void createLeaves();
@@ -50,7 +50,7 @@ private:
 	void clearPhysX();
 
 	PhysXSystem*       mPhysXSys;
-	PhysXTriangleMesh* mTerrian;
+	PhysXTriangleMesh* mTerrain;
 	PhysXSoftBody*     mTree;
 	PhysXFluid*        mFluid;
 
@@ -59,7 +59,7 @@ private:
 
 	NxClothDesc mLeafDesc;
 
-	ObjMeshExt* mTerrianObj;
+	ObjMeshExt* mTerrainObj;
 	ObjMeshExt* mTreeObj;
 	ObjMeshExt* mLeafObj;
 
