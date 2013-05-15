@@ -35,6 +35,7 @@ protected:
 	virtual bool mouseReleased(const MouseEvent &arg, MouseButtonID id);
 
 	virtual void resetCamPos();
+	virtual void clearAnimations();
 
 	SceneNode* mCameraNode;
 	SceneNode* mHelperNode;

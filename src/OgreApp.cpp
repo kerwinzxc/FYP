@@ -240,6 +240,8 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 		}
 		break;
 	case OIS::KC_H:
+		if (mStatesPanel->getParamValue("Animation") != "None")
+			clearAnimations();
 		clearPhysX();
 		mPhysXSys = new PhysXSystem();
 		switch (mLastState)
@@ -359,16 +361,7 @@ bool OgreApp::keyPressed(const KeyEvent &arg)
 		mStatesPanel->setParamValue(7, "Fluid");
 		break;
 	case OIS::KC_8:
-		if (mTerrainAnimState->getEnabled())
-			mTerrainAnimState->setEnabled(false);
-		else if (mTreeAnimState->getEnabled())
-			mTreeAnimState->setEnabled(false);
-		else if (mFluidAnimState->getEnabled())
-			mFluidAnimState->setEnabled(false);
-		mCameraNode->setPosition(0.0, 0.0, 0.0);
-		resetCamPos();
-		mCameraMan->setStyle(CS_FREELOOK);
-		mStatesPanel->setParamValue(7, "None");
+		clearAnimations();
 		break;
 	case OIS::KC_ADD:
 		if ((mLastState != GPU && mNumLeaves < 400) ||
@@ -594,6 +587,20 @@ void OgreApp::createFluid()
 		fluidDesc.flags &= ~NX_FF_HARDWARE;
 
 	mFluid = new PhysXFluid(mPhysXSys->getScene(), mSceneMgr, fluidDesc);
+}
+
+void OgreApp::clearAnimations()
+{
+	if (mTerrainAnimState->getEnabled())
+		mTerrainAnimState->setEnabled(false);
+	else if (mTreeAnimState->getEnabled())
+		mTreeAnimState->setEnabled(false);
+	else if (mFluidAnimState->getEnabled())
+		mFluidAnimState->setEnabled(false);
+	mCameraNode->setPosition(0.0, 0.0, 0.0);
+	resetCamPos();
+	mCameraMan->setStyle(CS_FREELOOK);
+	mStatesPanel->setParamValue(7, "None");
 }
 
 void OgreApp::clearPhysX()
